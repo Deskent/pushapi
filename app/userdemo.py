@@ -404,4 +404,5 @@ class UserDemo(object):
         finally:
             print("End Event")
             self._client.EndEvent(event_id, abort_flag)
+            print("End Event: OK")
         return guid
