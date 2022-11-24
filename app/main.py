@@ -1,15 +1,11 @@
-import os
 import datetime
 
 from flask import Flask, request
+
 import pushapi
 import pushapi.ttypes
+from config import settings
 from sender import OwnCloud, ExampleChatMsg, ExampleDescription, DemoSkypePerson
-
-HOST_DFL = os.getenv("HOST_DFL")
-PORT_DFL = int(os.getenv("PORT_DFL"))
-NAME_DFL = os.getenv("NAME_DFL")
-TOKEN_DFL = os.getenv("TOKEN_DFL")
 
 app = Flask(__name__)
 
@@ -88,7 +84,8 @@ def get_default_event(text: str):
 
 def send_message_to_traffic_monitor(event: ExampleDescription) -> None:
     sender = OwnCloud(
-        event=event, host=HOST_DFL, port=PORT_DFL, name=NAME_DFL, token=TOKEN_DFL
+        event=event, host=settings.HOST_DFL, port=settings.PORT_DFL,
+        name=settings.NAME_DFL, token=settings.TOKEN_DFL
     )
     sender.run()
 
