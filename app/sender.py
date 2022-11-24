@@ -158,25 +158,22 @@ def create_event():
     )
 
     # Классы-надстройки над Identity для создания персон в примерах
-    class DemoAuthPerson(wrappers.PersonIdentity):
-        '''Идентификация персоны с контактами auth и email.'''
+    class DemoEmailPerson(wrappers.PersonIdentity):
+        '''Идентификация персоны с контактам email.'''
 
-        def __init__(self, auth, email):
+        def __init__(self, email):
             '''Формирует идентификацию персоны с контактами auth и email.
-            :param auth: имя учетной записи персоны
-            :type auth: str
             :param email: адрес электронной почты персоны
             :type email: str
             '''
-            # Заполняем контакты: логин, почта, можно добавить скайп и пр.
+            # Заполняем контакт email
             contacts = [
-                wrappers.AuthContact(auth),
                 wrappers.EmailContact(email)
             ]
-            super(DemoAuthPerson, self).__init__(contacts)
+            super(DemoEmailPerson, self).__init__(contacts)
 
-    sender_own_cloud = DemoAuthPerson(auth="SenderAuth", email="own_cloud_sender@mail.ru")
-    receiver_own_cloud = DemoAuthPerson(auth="ReceiverAuth", email="own_cloud_reveiver@mail.ru")
+    sender_own_cloud = DemoEmailPerson(email="own_cloud_sender@mail.ru")
+    receiver_own_cloud = DemoEmailPerson(email="own_cloud_reveiver@mail.ru")
     own_cloud_data_attrs = [
         # обязательные атрибуты
         pushapi.Attribute(constants.data_attr_file_filename, "own_cloud_test.txt"),
