@@ -177,14 +177,15 @@ def create_event():
     own_cloud_data_attrs = [
         # обязательные атрибуты
         pushapi.Attribute(constants.data_attr_file_filename, "own_cloud_test.txt"),
+        pushapi.Attribute(constants.data_attr_file_source_file_path, "./own_cloud_test.txt"),
         pushapi.Attribute(constants.data_attr_file_destination_file_path, "own_cloud/temp")
     ]
     event = ExampleDescription(
-        name="OwnCloud test",  # название примера, будет добавлено в атрибуты события
+        name="OwnCloud_test",  # название примера, будет добавлено в атрибуты события
         evt_class=pushapi.EventClass.kFileExchange,  # класс события - kFileExchange
-        service="own_cloud_service",  # сервис события - "ftp"
-        senders=[sender_own_cloud],  # отправители - для примера добавлена персона и компьютер
-        receivers=[receiver_own_cloud],  # получатель - веб-ресурс
+        service="own_cloud_service",  # сервис события -
+        senders=[sender_own_cloud],  # отправители
+        receivers=[receiver_own_cloud],  # получатель
         data_file="own_cloud_test.txt",  # пересылаемые данные
         data_attrs=own_cloud_data_attrs,  # атрибуты данных - требуется задание имени файла
         messages=None  # сообщения чата - должны быть None для событий класса kFileExchange
