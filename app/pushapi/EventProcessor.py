@@ -337,9 +337,11 @@ class Client(Iface):
          - event_id
          - abort
         """
-        print()
+        print("Send EndEvent")
         self.send_EndEvent(event_id, abort)
+        print("Send recv_EndEvent")
         self.recv_EndEvent()
+        print("Endof")
 
     def send_EndEvent(self, event_id, abort):
         self._oprot.writeMessageBegin('EndEvent', TMessageType.CALL, self._seqid)
