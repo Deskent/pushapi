@@ -113,7 +113,7 @@ class OwnCloud(object):
             raise
         finally:
             print("End Event")
-            # self._client.EndEvent(event_id, abort_flag)
+            self._client.EndEvent(event_id, abort_flag)
 
             print(f"End Event: OK\nGuid: {guid}")
         return guid
