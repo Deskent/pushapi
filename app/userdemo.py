@@ -337,17 +337,18 @@ class UserDemo(object):
     '''
 
     def __init__(self, host, port, name, token):
-        self._creds = pushapi.Credentials(name, token)
+        print(f"Connecting to {host}:{port}")
         self._client = wrappers.make_client(host, port)
+        self._creds = pushapi.Credentials(name, token)
 
     def run(self):
         '''Функция проверяет соединение с сервером и отсылает тестовые события.'''
         # проверка версии и токена
         self._check_server()
         # передача на сервер PushAPI всех тестовых событий
-        self._run_demo_event(own_cloud)
-        # for demo_data in demo_collection:
-        #     self._run_demo_event(demo_data)
+        # self._run_demo_event(own_cloud)
+        for demo_data in demo_collection:
+            self._run_demo_event(demo_data)
 
     def _check_server(self):
         '''Проверка версии сервера PushAPI и данных учётной записи.'''
@@ -364,6 +365,7 @@ class UserDemo(object):
         # формируем трифтовую структуру события
         evt = make_demo_event(demo_data)
         # отсылаем на сервер
+        print(f"Sending event: {demo_data.name}")
         guid = self._send_to_server(evt)
         # сообщаем о выполнении
         print("%s event successfully sent to PushAPI server with guid %s" % (demo_data.name, guid))
