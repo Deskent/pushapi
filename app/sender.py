@@ -29,7 +29,7 @@ class EventDataFromFile(EventDataFromString):
     # Возможна реализация чтения и отправка файла по чанкам
     def __init__(self, filename, attrs=None):
         with open(filename) as stm:
-            content = stm.read()
+            content = stm.read().encode()
         super(EventDataFromFile, self).__init__(content, attrs)
 
 
