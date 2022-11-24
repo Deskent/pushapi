@@ -157,8 +157,26 @@ def create_event():
         ["name", "evt_class", "service", "senders", "receivers", "data_file", "data_attrs", "messages"]
     )
 
-    sender_own_cloud = wrappers.DeviceIdentity('OwnCloudSender')
-    receiver_own_cloud = wrappers.DeviceIdentity("OwnCloudReceiver")
+    # Классы-надстройки над Identity для создания персон в примерах
+    class DemoAuthPerson(wrappers.PersonIdentity):
+        '''Идентификация персоны с контактами auth и email.'''
+
+        def __init__(self, auth, email):
+            '''Формирует идентификацию персоны с контактами auth и email.
+            :param auth: имя учетной записи персоны
+            :type auth: str
+            :param email: адрес электронной почты персоны
+            :type email: str
+            '''
+            # Заполняем контакты: логин, почта, можно добавить скайп и пр.
+            contacts = [
+                wrappers.AuthContact(auth),
+                wrappers.EmailContact(email)
+            ]
+            super(DemoAuthPerson, self).__init__(contacts)
+
+    sender_own_cloud = DemoAuthPerson(auth="SenderAuth", email="own_cloud_sender@mail.ru")
+    receiver_own_cloud = DemoAuthPerson(auth="ReceiverAuth", email="own_cloud_reveiver@mail.ru")
     own_cloud_data_attrs = [
         # обязательные атрибуты
         pushapi.Attribute(constants.data_attr_file_filename, "own_cloud_test.txt"),
