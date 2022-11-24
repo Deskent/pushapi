@@ -179,7 +179,7 @@ def create_event():
     own_cloud_data_attrs = [
         # обязательные атрибуты
         pushapi.Attribute(constants.data_attr_file_filename, "own_cloud_test.txt"),
-        pushapi.Attribute(constants.data_attr_file_source_file_path, "./own_cloud_test.txt"),
+        # pushapi.Attribute(constants.data_attr_file_source_file_path, "./own_cloud_test.txt"),
         pushapi.Attribute(constants.data_attr_file_destination_file_path, "own_cloud/temp")
     ]
     event = ExampleDescription(
