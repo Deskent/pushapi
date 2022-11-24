@@ -95,6 +95,7 @@ class OwnCloud(object):
         print("Begin event")
         event_id = self._client.BeginEvent(evt, self._creds)
         abort_flag = False
+        guid = None
         try:
             for data in evt.evt_data:
                 print("Begin Stream")
