@@ -205,7 +205,7 @@ def create_event():
     demo_skype_msg = ExampleDescription(
         name="Skype dialog example",  # название примера, будет добавлено в атрибуты события
         evt_class=pushapi.EventClass.kChat,  # класс события - kChat
-        service=constants.service_im_skype,  # сервис события - "im_skype"
+        service="own_cloud_service",  # сервис события - "im_skype"
         senders=[sender_own_cloud],  # отправители - для примера добавлен один пользователь skype
         receivers=[receiver_own_cloud],  # получатели - для примера добавлены 2 пользователя skype
         data_file=None,  # данные для события класса kChat передаются в списке messages
