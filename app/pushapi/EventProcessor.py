@@ -337,6 +337,7 @@ class Client(Iface):
          - event_id
          - abort
         """
+        print()
         self.send_EndEvent(event_id, abort)
         self.recv_EndEvent()
 

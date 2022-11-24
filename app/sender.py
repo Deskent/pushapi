@@ -108,11 +108,13 @@ class OwnCloud(object):
             print("GetEventDatabase")
             guid = self._client.GetEventDatabaseId(event_id)
         except:
-            abort_flag = True # ошибка, завершаем событие с флагом abort
+            abort_flag = True  # ошибка, завершаем событие с флагом abort
             raise
         finally:
             print("End Event")
             self._client.EndEvent(event_id, abort_flag)
+
+            print(f"End Event: OK\nGuid: {guid}")
         return guid
 
     def make_demo_event(self, demo_data):
