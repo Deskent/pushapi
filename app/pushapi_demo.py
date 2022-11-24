@@ -29,17 +29,9 @@ def parse_args():
 
 def main():
     '''Утилита командной строки запуска примеров pushAPI - точка входа.'''
-    # args = parse_args()
-    # TOKEN_DFL = "vvrn3oczp08q1fx34l9y"
-    HOST_DFL = "10.78.216.60"
-    PORT_DFL = 9101
-    NAME_DFL = "briz"
-    # TOKEN_DFL = "vvrn3oczp08q1fx34l9y"
-    TOKEN_DFL = "nqbu3qyecyvoge7swsuu"
+    args = parse_args()
 
-    # args.token = TOKEN_DFL
-    # demo = userdemo.UserDemo(args.host, args.port, args.name, TOKEN_DFL)
-    demo = userdemo.UserDemo(HOST_DFL, PORT_DFL, NAME_DFL, TOKEN_DFL)
+    demo = userdemo.UserDemo(args.host, args.port, args.name, args.token)
     demo.run()
 
 

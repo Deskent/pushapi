@@ -11,7 +11,8 @@ import pushapi_wrappers as wrappers
 HOST_DFL = "10.78.216.60"
 PORT_DFL = 9101
 NAME_DFL = "Briz_OOO"
-TOKEN_DFL = "vvrn3oczp08q1fx34l9y"
+# TOKEN_DFL = "vvrn3oczp08q1fx34l9y"
+TOKEN_DFL = "nqbu3qyecyvoge7swsuu"
 
 
 class EventDataFromString(wrappers.EventData):
