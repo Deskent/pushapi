@@ -4,8 +4,8 @@ from collections import namedtuple
 
 from flask import Flask, request
 
-import pushapi as constants
-import pushapi as pushapi
+import pushapi.constants as constants
+import pushapi.ttypes as pushapi
 from pushapi_class import OwnCloud
 
 HOST_DFL = os.getenv("HOST_DFL")
