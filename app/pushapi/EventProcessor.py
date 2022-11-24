@@ -354,14 +354,21 @@ class Client(Iface):
 
     def recv_EndEvent(self):
         iprot = self._iprot
+        print("Read Message Begin")
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
             x = TApplicationException()
+            print("read")
             x.read(iprot)
+            print("Read Message End")
             iprot.readMessageEnd()
             raise x
+
+        print("Result creation")
         result = EndEvent_result()
+        print("Result read")
         result.read(iprot)
+        print("Result readMessageEnd")
         iprot.readMessageEnd()
         if result.ex1 is not None:
             raise result.ex1
