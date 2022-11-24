@@ -30,7 +30,7 @@ class EventDataFromFile(EventDataFromString):
     # Возможна реализация чтения и отправка файла по чанкам
     def __init__(self, filename, attrs=None):
         with open(filename) as stm:
-            content = stm
+            content = stm.buffer
         print(f"Content: {content}")
         super(EventDataFromFile, self).__init__(content, attrs)
 
