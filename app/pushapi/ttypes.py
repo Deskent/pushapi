@@ -6,13 +6,13 @@
 #  options string: py
 #
 
-from thrift.Thrift import TType, TMessageType, TFrozenDict, TException, TApplicationException
-from thrift.protocol.TProtocol import TProtocolException
-from thrift.TRecursive import fix_spec
-
 import sys
 
+from thrift.TRecursive import fix_spec
+from thrift.Thrift import TType, TException
+from thrift.protocol.TProtocol import TProtocolException
 from thrift.transport import TTransport
+
 all_structs = []
 
 
@@ -77,13 +77,13 @@ class Attribute(object):
      - value
     """
 
-
-    def __init__(self, name=None, value=None,):
+    def __init__(self, name=None, value=None, ):
         self.name = name
         self.value = value
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -148,13 +148,13 @@ class ContactWithMeta(object):
      - meta
     """
 
-
-    def __init__(self, contact=None, meta=None,):
+    def __init__(self, contact=None, meta=None, ):
         self.contact = contact
         self.meta = meta
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -221,8 +221,8 @@ class Identity(object):
      - identity_contacts_with_meta
     """
 
-
-    def __init__(self, identity_id=None, identity_type=None, identity_contacts=None, identity_attributes=None, identity_contacts_with_meta=None,):
+    def __init__(self, identity_id=None, identity_type=None, identity_contacts=None, identity_attributes=None,
+                 identity_contacts_with_meta=None, ):
         self.identity_id = identity_id
         self.identity_type = identity_type
         self.identity_contacts = identity_contacts
@@ -230,7 +230,8 @@ class Identity(object):
         self.identity_contacts_with_meta = identity_contacts_with_meta
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -351,13 +352,13 @@ class EventData(object):
      - data_attributes
     """
 
-
-    def __init__(self, data_id=None, data_attributes=None,):
+    def __init__(self, data_id=None, data_attributes=None, ):
         self.data_id = data_id
         self.data_attributes = data_attributes
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -431,15 +432,15 @@ class ChatMessage(object):
      - mes_data_id
     """
 
-
-    def __init__(self, sender_id=None, sent_time=None, utf8_text=None, mes_data_id=None,):
+    def __init__(self, sender_id=None, sent_time=None, utf8_text=None, mes_data_id=None, ):
         self.sender_id = sender_id
         self.sent_time = sent_time
         self.utf8_text = utf8_text
         self.mes_data_id = mes_data_id
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -454,12 +455,14 @@ class ChatMessage(object):
                     iprot.skip(ftype)
             elif fid == 2:
                 if ftype == TType.STRING:
-                    self.sent_time = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.sent_time = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                               0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 3:
                 if ftype == TType.STRING:
-                    self.utf8_text = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.utf8_text = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                               0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 4:
@@ -525,14 +528,14 @@ class ItemLink(object):
      - link_name
     """
 
-
-    def __init__(self, id=None, link_to_id=None, link_name=None,):
+    def __init__(self, id=None, link_to_id=None, link_name=None, ):
         self.id = id
         self.link_to_id = link_to_id
         self.link_name = link_name
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -552,7 +555,8 @@ class ItemLink(object):
                     iprot.skip(ftype)
             elif fid == 3:
                 if ftype == TType.STRING:
-                    self.link_name = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.link_name = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                               0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -616,8 +620,8 @@ class Event(object):
      - evt_destination
     """
 
-
-    def __init__(self, evt_class=None, evt_service=None, evt_attributes=None, evt_senders=None, evt_receivers=None, evt_data=None, evt_messages=None, evt_links=None, evt_source=None, evt_destination=None,):
+    def __init__(self, evt_class=None, evt_service=None, evt_attributes=None, evt_senders=None, evt_receivers=None,
+                 evt_data=None, evt_messages=None, evt_links=None, evt_source=None, evt_destination=None, ):
         self.evt_class = evt_class
         self.evt_service = evt_service
         self.evt_attributes = evt_attributes
@@ -630,7 +634,8 @@ class Event(object):
         self.evt_destination = evt_destination
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -645,7 +650,8 @@ class Event(object):
                     iprot.skip(ftype)
             elif fid == 2:
                 if ftype == TType.STRING:
-                    self.evt_service = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.evt_service = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                                 0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 3:
@@ -829,13 +835,13 @@ class Credentials(object):
      - token
     """
 
-
-    def __init__(self, company_name=None, token=None,):
+    def __init__(self, company_name=None, token=None, ):
         self.company_name = company_name
         self.token = token
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -845,7 +851,8 @@ class Credentials(object):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.company_name = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.company_name = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                                  0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
@@ -899,12 +906,12 @@ class EventNotFound(TException):
      - message
     """
 
-
-    def __init__(self, message=None,):
+    def __init__(self, message=None, ):
         self.message = message
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -914,7 +921,8 @@ class EventNotFound(TException):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.message = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.message = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                             0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -958,12 +966,12 @@ class DataNotFound(TException):
      - message
     """
 
-
-    def __init__(self, message=None,):
+    def __init__(self, message=None, ):
         self.message = message
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -973,7 +981,8 @@ class DataNotFound(TException):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.message = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.message = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                             0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -1017,12 +1026,12 @@ class StreamNotFound(TException):
      - message
     """
 
-
-    def __init__(self, message=None,):
+    def __init__(self, message=None, ):
         self.message = message
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -1032,7 +1041,8 @@ class StreamNotFound(TException):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.message = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.message = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                             0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -1076,12 +1086,12 @@ class InvalidEventFormat(TException):
      - message
     """
 
-
-    def __init__(self, message=None,):
+    def __init__(self, message=None, ):
         self.message = message
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -1091,7 +1101,8 @@ class InvalidEventFormat(TException):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.message = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.message = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                             0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -1135,12 +1146,12 @@ class InvalidCredentials(TException):
      - message
     """
 
-
-    def __init__(self, message=None,):
+    def __init__(self, message=None, ):
         self.message = message
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -1150,7 +1161,8 @@ class InvalidCredentials(TException):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.message = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.message = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                             0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -1194,12 +1206,12 @@ class LicenseError(TException):
      - message
     """
 
-
-    def __init__(self, message=None,):
+    def __init__(self, message=None, ):
         self.message = message
 
     def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+        if iprot._fast_decode is not None and isinstance(iprot.trans,
+                                                         TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
         iprot.readStructBegin()
@@ -1209,7 +1221,8 @@ class LicenseError(TException):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.message = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                    self.message = iprot.readString().decode('utf-8') if sys.version_info[
+                                                                             0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -1245,97 +1258,99 @@ class LicenseError(TException):
 
     def __ne__(self, other):
         return not (self == other)
+
+
 all_structs.append(Attribute)
 Attribute.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'name', 'UTF8', None, ),  # 1
-    (2, TType.STRING, 'value', 'UTF8', None, ),  # 2
+    (1, TType.STRING, 'name', 'UTF8', None,),  # 1
+    (2, TType.STRING, 'value', 'UTF8', None,),  # 2
 )
 all_structs.append(ContactWithMeta)
 ContactWithMeta.thrift_spec = (
     None,  # 0
-    (1, TType.STRUCT, 'contact', [Attribute, None], None, ),  # 1
-    (2, TType.STRING, 'meta', 'UTF8', None, ),  # 2
+    (1, TType.STRUCT, 'contact', [Attribute, None], None,),  # 1
+    (2, TType.STRING, 'meta', 'UTF8', None,),  # 2
 )
 all_structs.append(Identity)
 Identity.thrift_spec = (
     None,  # 0
-    (1, TType.I32, 'identity_id', None, None, ),  # 1
-    (2, TType.I32, 'identity_type', None, None, ),  # 2
-    (3, TType.LIST, 'identity_contacts', (TType.STRUCT, [Attribute, None], False), None, ),  # 3
-    (4, TType.LIST, 'identity_attributes', (TType.STRUCT, [Attribute, None], False), None, ),  # 4
-    (5, TType.LIST, 'identity_contacts_with_meta', (TType.STRUCT, [ContactWithMeta, None], False), None, ),  # 5
+    (1, TType.I32, 'identity_id', None, None,),  # 1
+    (2, TType.I32, 'identity_type', None, None,),  # 2
+    (3, TType.LIST, 'identity_contacts', (TType.STRUCT, [Attribute, None], False), None,),  # 3
+    (4, TType.LIST, 'identity_attributes', (TType.STRUCT, [Attribute, None], False), None,),  # 4
+    (5, TType.LIST, 'identity_contacts_with_meta', (TType.STRUCT, [ContactWithMeta, None], False), None,),  # 5
 )
 all_structs.append(EventData)
 EventData.thrift_spec = (
     None,  # 0
-    (1, TType.I32, 'data_id', None, None, ),  # 1
-    (2, TType.LIST, 'data_attributes', (TType.STRUCT, [Attribute, None], False), None, ),  # 2
+    (1, TType.I32, 'data_id', None, None,),  # 1
+    (2, TType.LIST, 'data_attributes', (TType.STRUCT, [Attribute, None], False), None,),  # 2
 )
 all_structs.append(ChatMessage)
 ChatMessage.thrift_spec = (
     None,  # 0
-    (1, TType.I32, 'sender_id', None, None, ),  # 1
-    (2, TType.STRING, 'sent_time', 'UTF8', None, ),  # 2
-    (3, TType.STRING, 'utf8_text', 'UTF8', None, ),  # 3
-    (4, TType.I32, 'mes_data_id', None, None, ),  # 4
+    (1, TType.I32, 'sender_id', None, None,),  # 1
+    (2, TType.STRING, 'sent_time', 'UTF8', None,),  # 2
+    (3, TType.STRING, 'utf8_text', 'UTF8', None,),  # 3
+    (4, TType.I32, 'mes_data_id', None, None,),  # 4
 )
 all_structs.append(ItemLink)
 ItemLink.thrift_spec = (
     None,  # 0
-    (1, TType.I32, 'id', None, None, ),  # 1
-    (2, TType.I32, 'link_to_id', None, None, ),  # 2
-    (3, TType.STRING, 'link_name', 'UTF8', None, ),  # 3
+    (1, TType.I32, 'id', None, None,),  # 1
+    (2, TType.I32, 'link_to_id', None, None,),  # 2
+    (3, TType.STRING, 'link_name', 'UTF8', None,),  # 3
 )
 all_structs.append(Event)
 Event.thrift_spec = (
     None,  # 0
-    (1, TType.I32, 'evt_class', None, None, ),  # 1
-    (2, TType.STRING, 'evt_service', 'UTF8', None, ),  # 2
-    (3, TType.LIST, 'evt_attributes', (TType.STRUCT, [Attribute, None], False), None, ),  # 3
-    (4, TType.LIST, 'evt_senders', (TType.STRUCT, [Identity, None], False), None, ),  # 4
-    (5, TType.LIST, 'evt_receivers', (TType.STRUCT, [Identity, None], False), None, ),  # 5
-    (6, TType.LIST, 'evt_data', (TType.STRUCT, [EventData, None], False), None, ),  # 6
-    (7, TType.LIST, 'evt_links', (TType.STRUCT, [ItemLink, None], False), None, ),  # 7
-    (8, TType.LIST, 'evt_messages', (TType.STRUCT, [ChatMessage, None], False), None, ),  # 8
-    (9, TType.STRUCT, 'evt_source', [Identity, None], None, ),  # 9
-    (10, TType.STRUCT, 'evt_destination', [Identity, None], None, ),  # 10
+    (1, TType.I32, 'evt_class', None, None,),  # 1
+    (2, TType.STRING, 'evt_service', 'UTF8', None,),  # 2
+    (3, TType.LIST, 'evt_attributes', (TType.STRUCT, [Attribute, None], False), None,),  # 3
+    (4, TType.LIST, 'evt_senders', (TType.STRUCT, [Identity, None], False), None,),  # 4
+    (5, TType.LIST, 'evt_receivers', (TType.STRUCT, [Identity, None], False), None,),  # 5
+    (6, TType.LIST, 'evt_data', (TType.STRUCT, [EventData, None], False), None,),  # 6
+    (7, TType.LIST, 'evt_links', (TType.STRUCT, [ItemLink, None], False), None,),  # 7
+    (8, TType.LIST, 'evt_messages', (TType.STRUCT, [ChatMessage, None], False), None,),  # 8
+    (9, TType.STRUCT, 'evt_source', [Identity, None], None,),  # 9
+    (10, TType.STRUCT, 'evt_destination', [Identity, None], None,),  # 10
 )
 all_structs.append(Credentials)
 Credentials.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'company_name', 'UTF8', None, ),  # 1
-    (2, TType.STRING, 'token', 'UTF8', None, ),  # 2
+    (1, TType.STRING, 'company_name', 'UTF8', None,),  # 1
+    (2, TType.STRING, 'token', 'UTF8', None,),  # 2
 )
 all_structs.append(EventNotFound)
 EventNotFound.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'message', 'UTF8', None, ),  # 1
+    (1, TType.STRING, 'message', 'UTF8', None,),  # 1
 )
 all_structs.append(DataNotFound)
 DataNotFound.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'message', 'UTF8', None, ),  # 1
+    (1, TType.STRING, 'message', 'UTF8', None,),  # 1
 )
 all_structs.append(StreamNotFound)
 StreamNotFound.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'message', 'UTF8', None, ),  # 1
+    (1, TType.STRING, 'message', 'UTF8', None,),  # 1
 )
 all_structs.append(InvalidEventFormat)
 InvalidEventFormat.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'message', 'UTF8', None, ),  # 1
+    (1, TType.STRING, 'message', 'UTF8', None,),  # 1
 )
 all_structs.append(InvalidCredentials)
 InvalidCredentials.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'message', 'UTF8', None, ),  # 1
+    (1, TType.STRING, 'message', 'UTF8', None,),  # 1
 )
 all_structs.append(LicenseError)
 LicenseError.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'message', 'UTF8', None, ),  # 1
+    (1, TType.STRING, 'message', 'UTF8', None,),  # 1
 )
 fix_spec(all_structs)
 del all_structs

@@ -368,9 +368,8 @@ class Client(Iface):
         result = EndEvent_result()
         print("Result read")
         result.read(iprot)
-        print(f"Result readMessageEnd\n{iprot}\n\n{result}")
+        print(f"Result readMessageEnd\n{result}")
         iprot.readMessageEnd()
-        print(f"\nResult AFTER readMessageEnd\n{iprot}\n\n{result}")
         if result.ex1 is not None:
             raise result.ex1
         if result.ex2 is not None:
@@ -1784,18 +1783,20 @@ class EndEvent_result(object):
      - ex3
     """
 
-
     def __init__(self, ex1=None, ex2=None, ex3=None,):
         self.ex1 = ex1
         self.ex2 = ex2
         self.ex3 = ex3
 
     def read(self, iprot):
+        print("EnvEvent_result read...")
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
+        print("readStructBegin...")
         iprot.readStructBegin()
         while True:
+            print("readFieldBegin...")
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
