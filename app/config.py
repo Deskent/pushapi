@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pydantic import BaseSettings
 
 
@@ -8,4 +10,6 @@ class Settings(BaseSettings):
     TOKEN_DFL: str
 
 
-settings = Settings(_env_file='../.env', _env_file_encoding='utf-8')
+BASE_DIR = Path(__file__).parent
+env_file = BASE_DIR.parent / '.env'
+settings = Settings(_env_file=env_file, _env_file_encoding='utf-8')
