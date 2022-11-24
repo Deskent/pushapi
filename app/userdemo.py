@@ -339,30 +339,38 @@ class UserDemo(object):
     def __init__(self, host, port, name, token):
         print(f"Connecting to {host}:{port}")
         self._client = wrappers.make_client(host, port)
+        print(f"Connecting to {host}:{port} OK")
+        print(f"Check credentials: [{name}] : [{token}]")
         self._creds = pushapi.Credentials(name, token)
+        print(f"Check credentials: OK")
 
     def run(self):
         '''Функция проверяет соединение с сервером и отсылает тестовые события.'''
         # проверка версии и токена
         self._check_server()
         # передача на сервер PushAPI всех тестовых событий
-        # self._run_demo_event(own_cloud)
-        for demo_data in demo_collection:
-            self._run_demo_event(demo_data)
+        self._run_demo_event(own_cloud)
+        # for demo_data in demo_collection:
+        #     self._run_demo_event(demo_data)
 
     def _check_server(self):
         '''Проверка версии сервера PushAPI и данных учётной записи.'''
+
+        print(f"Check server version...")
         client_version = constants.pushapi_version
         server_version = self._client.GetVersion()
         if server_version < client_version:
             raise RuntimeError("incompatible version: client: %d, server: %d" % (client_version, server_version))
         self._client.VerifyCredentials(self._creds)
+        print(f"Check server version: OK")
 
     def _run_demo_event(self, demo_data):
         '''Формирование и отправка примера события на сервер.
         :param demo_data: данные примера
         '''
+
         # формируем трифтовую структуру события
+        print(f"Make event {demo_data.name}")
         evt = make_demo_event(demo_data)
         # отсылаем на сервер
         print(f"Sending event: {demo_data.name}")
@@ -375,6 +383,7 @@ class UserDemo(object):
         :param evt: полностью сформированное событие
         :type evt: pushapi.Event
         '''
+
         event_id = self._client.BeginEvent(evt, self._creds)
         abort_flag = False
         try:
