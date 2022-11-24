@@ -368,8 +368,9 @@ class Client(Iface):
         result = EndEvent_result()
         print("Result read")
         result.read(iprot)
-        print("Result readMessageEnd")
+        print(f"Result readMessageEnd\n{iprot}\n\n{result}")
         iprot.readMessageEnd()
+        print(f"\nResult AFTER readMessageEnd\n{iprot}\n\n{result}")
         if result.ex1 is not None:
             raise result.ex1
         if result.ex2 is not None:
