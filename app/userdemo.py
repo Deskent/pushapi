@@ -362,7 +362,6 @@ class UserDemo(object):
         if server_version < client_version:
             raise RuntimeError("incompatible version: client: %d, server: %d" % (client_version, server_version))
         self._client.VerifyCredentials(self._creds)
-        print(f"Check server version: OK")
 
     def _run_demo_event(self, demo_data):
         '''Формирование и отправка примера события на сервер.
