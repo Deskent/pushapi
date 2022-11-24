@@ -153,32 +153,33 @@ class OwnCloud(object):
         # можно добавить другие атрибуты - evt.add_attribute("my_attr_name", "my_attr_value")
 
 
+ExampleChatMsg = namedtuple(
+    "ExampleChatMsg",
+    ["text", "sent_time", "sender_no"]
+)
+# Класс для описания примера
+ExampleDescription = namedtuple(
+    "ExampleDescription",
+    ["name", "evt_class", "service", "senders", "receivers", "data_file", "data_attrs", "messages"]
+)
+
+# Классы-надстройки над Identity для создания персон в примерах
+class DemoEmailPerson(wrappers.PersonIdentity):
+    '''Идентификация персоны с контактам email.'''
+
+    def __init__(self, email):
+        '''Формирует идентификацию персоны с контактами auth и email.
+        :param email: адрес электронной почты персоны
+        :type email: str
+        '''
+        # Заполняем контакт email
+        contacts = [
+            wrappers.EmailContact(email)
+        ]
+        super(DemoEmailPerson, self).__init__(contacts)
+
+
 def create_event():
-    ExampleChatMsg = namedtuple(
-        "ExampleChatMsg",
-        ["text", "sent_time", "sender_no"]
-    )
-    # Класс для описания примера
-    ExampleDescription = namedtuple(
-        "ExampleDescription",
-        ["name", "evt_class", "service", "senders", "receivers", "data_file", "data_attrs", "messages"]
-    )
-
-    # Классы-надстройки над Identity для создания персон в примерах
-    class DemoEmailPerson(wrappers.PersonIdentity):
-        '''Идентификация персоны с контактам email.'''
-
-        def __init__(self, email):
-            '''Формирует идентификацию персоны с контактами auth и email.
-            :param email: адрес электронной почты персоны
-            :type email: str
-            '''
-            # Заполняем контакт email
-            contacts = [
-                wrappers.EmailContact(email)
-            ]
-            super(DemoEmailPerson, self).__init__(contacts)
-
     sender_own_cloud = DemoEmailPerson(email="own_cloud_sender@mail.ru")
     receiver_own_cloud = DemoEmailPerson(email="own_cloud_reveiver@mail.ru")
     own_cloud_data_attrs = [
@@ -197,15 +198,19 @@ def create_event():
         data_attrs=own_cloud_data_attrs,  # атрибуты данных - требуется задание имени файла
         messages=None  # сообщения чата - должны быть None для событий класса kFileExchange
     )
+    return event
+
+
+def get_message_event(message: str):
     demo_msg1 = ExampleChatMsg(
-        text="OwnCloud_test_message",  # текст сообщения
+        text=message,  # текст сообщения
         sent_time="now",  # время посылки сообщения
         sender_no=0  # номер отправителя в списке evt_senders
     )
     demo_skype_msg = ExampleDescription(
-        name="Skype dialog example",  # название примера, будет добавлено в атрибуты события
+        name="OwnCloud_test_message_name2",  # название примера, будет добавлено в атрибуты события
         evt_class=pushapi.EventClass.kChat,  # класс события - kChat
-        service="own_cloud_service",  # сервис события - "im_skype"
+        service=constants.service_im_skype,  # сервис события - "im_skype"
         senders=[sender_own_cloud],  # отправители - для примера добавлен один пользователь skype
         receivers=[receiver_own_cloud],  # получатели - для примера добавлены 2 пользователя skype
         data_file=None,  # данные для события класса kChat передаются в списке messages
@@ -217,6 +222,9 @@ def create_event():
 
 
 if __name__ == '__main__':
-    event = create_event()
+    message = "test 2 with im_skype"
+    sender_own_cloud = DemoEmailPerson(email="own_cloud_sender2@mail.ru")
+    receiver_own_cloud = DemoEmailPerson(email="own_cloud_reveiver2@mail.ru")
+    event = get_message_event(message)
     app = OwnCloud(event=event, host=HOST_DFL, port=PORT_DFL, name=NAME_DFL, token=TOKEN_DFL)
     app.run()
