@@ -11,6 +11,8 @@
 /TM
 help.txt
 "\320\220\321\200\321\205\320\270\320\262/"
+*.json
+/Архив
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
