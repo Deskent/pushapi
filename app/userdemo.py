@@ -383,19 +383,25 @@ class UserDemo(object):
         :type evt: pushapi.Event
         '''
 
+        print("Begin event")
         event_id = self._client.BeginEvent(evt, self._creds)
         abort_flag = False
         try:
             for data in evt.evt_data:
+                print("Begin Stream")
                 stream_id = self._client.BeginStream(event_id, data.data_id)
                 try:
+                    print("Send Stream")
                     self._client.SendStreamData(event_id, stream_id, data.content)
                 finally:
+                    print("End Stream")
                     self._client.EndStream(event_id, stream_id)
+            print("GetEventDatabase")
             guid = self._client.GetEventDatabaseId(event_id)
         except:
             abort_flag = True # ошибка, завершаем событие с флагом abort
             raise
         finally:
+            print("End Event")
             self._client.EndEvent(event_id, abort_flag)
         return guid
