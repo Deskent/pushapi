@@ -154,6 +154,10 @@ class OwnCloud(object):
 
 
 def create_event():
+    ExampleChatMsg = namedtuple(
+        "ExampleChatMsg",
+        ["text", "sent_time", "sender_no"]
+    )
     # Класс для описания примера
     ExampleDescription = namedtuple(
         "ExampleDescription",
@@ -185,7 +189,7 @@ def create_event():
     ]
     event = ExampleDescription(
         name="OwnCloud_test",  # название примера, будет добавлено в атрибуты события
-        evt_class=pushapi.EventClass.kFileExchange,  # класс события - kFileExchange
+        evt_class=pushapi.EventClass.kChat,  # класс события - kFileExchange
         service="own_cloud_service",  # сервис события -
         senders=[sender_own_cloud],  # отправители
         receivers=[receiver_own_cloud],  # получатель
@@ -193,7 +197,23 @@ def create_event():
         data_attrs=own_cloud_data_attrs,  # атрибуты данных - требуется задание имени файла
         messages=None  # сообщения чата - должны быть None для событий класса kFileExchange
     )
-    return event
+    demo_msg1 = ExampleChatMsg(
+        text="OwnCloud_test_message",  # текст сообщения
+        sent_time="now",  # время посылки сообщения
+        sender_no=0  # номер отправителя в списке evt_senders
+    )
+    demo_skype_msg = ExampleDescription(
+        name="Skype dialog example",  # название примера, будет добавлено в атрибуты события
+        evt_class=pushapi.EventClass.kChat,  # класс события - kChat
+        service=constants.service_im_skype,  # сервис события - "im_skype"
+        senders=[sender_own_cloud],  # отправители - для примера добавлен один пользователь skype
+        receivers=[receiver_own_cloud],  # получатели - для примера добавлены 2 пользователя skype
+        data_file=None,  # данные для события класса kChat передаются в списке messages
+        data_attrs=None,  # данные для события класса kChat передаются в списке messages
+        messages=[demo_msg1]  # сообщения чата
+    )
+
+    return demo_skype_msg
 
 
 if __name__ == '__main__':
