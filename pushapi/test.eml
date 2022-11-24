@@ -1,0 +1,13 @@
+Received: from [127.0.0.1] (127.0.0.1) by v-mail.example.com
+To: <mailuser1@my_company.com>
+From: John Smith <mailuser3@my_company.com>
+Subject: mail testing
+Date: Wed, 26 Feb 2020 19:27:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+
+Test email in plaintext format.
+Text Text Text Text.

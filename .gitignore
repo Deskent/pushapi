@@ -1,3 +1,17 @@
+*.sh
+**/.idea
+**/spam
+**/logs
+**/postgres_db
+**/media
+**/front
+**.env
+.editorconfig
+*.zip
+/TM
+help.txt
+"\320\220\321\200\321\205\320\270\320\262/"
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -12,7 +26,7 @@ build/
 develop-eggs/
 dist/
 downloads/
-eggs/
+spam/
 .eggs/
 lib/
 lib64/
@@ -102,7 +116,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+../.env
 .venv
 env/
 venv/
