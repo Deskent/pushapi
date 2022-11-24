@@ -1,12 +1,10 @@
 import os
 import datetime
-from collections import namedtuple
 
 from flask import Flask, request
-
-import pushapi.constants as constants
-import pushapi.ttypes as pushapi
-from sender import OwnCloud, create_event
+import pushapi
+import pushapi.ttypes
+from sender import OwnCloud, ExampleChatMsg, ExampleDescription, DemoSkypePerson
 
 HOST_DFL = os.getenv("HOST_DFL")
 PORT_DFL = int(os.getenv("PORT_DFL"))
@@ -17,8 +15,10 @@ app = Flask(__name__)
 
 
 def get_message(data: dict) -> str:
-    file_name: str = data['name']
-    owner: str = data['owner']
+    if not data:
+        return "Message data parse error"
+    file_name: str = data.get('name', "Filename error")
+    owner: str = data.get('owner', "Owner error")
     date_time: datetime.datetime = datetime.datetime.fromtimestamp(data['datetime'])
     return (
         f"Отправитель: {owner}\n"
@@ -27,53 +27,90 @@ def get_message(data: dict) -> str:
     )
 
 
-def send_message_to_traffic_monitor(message: str) -> None:
-    pass
-    # ExampleChatMsg = namedtuple(
-    #     "ExampleChatMsg",
-    #     ["text", "sent_time", "sender_no"]
-    # )
-    # ExampleDescription = namedtuple(
-    #     "ExampleDescription",
-    #     ["name", "evt_class", "service", "senders", "receivers", "data_file", "data_attrs", "messages"]
-    # )
-    # demo_msg1 = ExampleChatMsg(
-    #     text=message,  # текст сообщения
-    #     sent_time="now",  # время посылки сообщения
-    #     sender_no=0  # номер отправителя в списке evt_senders
-    # )
-    # msg = ExampleDescription(
-    #     name="Skype dialog example",  # название примера, будет добавлено в атрибуты события
-    #     evt_class=pushapi.EventClass.kChat,  # класс события - kChat
-    #     service=constants.service_im_skype,  # сервис события - "im_skype"
-    #     senders=[sender_skype],  # отправители - для примера добавлен один пользователь skype
-    #     receivers=[receiver_skype1, receiver_skype2],  # получатели - для примера добавлены 2 пользователя skype
-    #     data_file=None,  # данные для события класса kChat передаются в списке messages
-    #     data_attrs=None,  # данные для события класса kChat передаются в списке messages
-    #     messages=[demo_msg1]  # сообщения чата
-    # )
-    # pushapi_sender = OwnCloud(
-    #     event=msg,
-    #     host=HOST_DFL,
-    #     port=PORT_DFL,
-    #     name=NAME_DFL,
-    #     token=TOKEN_DFL
-    # )
-    # pushapi_sender.run()
-    # print(message)
+def create_message_instance(data: dict, text: str = '') -> ExampleChatMsg:
+    print("Getting message instance...")
+
+    if not text:
+        text: str = get_message(data)
+        print(f"Got message text: {text}")
+    return ExampleChatMsg(
+        text=text,  # текст сообщения
+        sent_time="now",  # время посылки сообщения
+        sender_no=0  # номер отправителя в списке evt_senders
+    )
+
+
+def get_message_event(data: dict, text: str = '') -> ExampleDescription:
+    print("Getting message event...")
+    message: ExampleChatMsg = create_message_instance(data, text)
+    print(f"Got message instance: {message}")
+    sender = DemoSkypePerson(data.get('owner', "All"))
+    print(f"Sender: {sender}")
+    receiver = DemoSkypePerson(data.get('receiver', "All"))
+    print(f"Receiver: {receiver}")
+
+    message_event = ExampleDescription(
+        name="OwnCloud_test_message_name2",  # название примера, будет добавлено в атрибуты события
+        evt_class=pushapi.ttypes.EventClass.kChat,  # класс события - kChat
+        service="im_skype",
+        senders=[sender],  # отправители - для примера добавлен один пользователь skype
+        receivers=[receiver],  # получатели - для примера добавлены 2 пользователя skype
+        data_file=None,  # данные для события класса kChat передаются в списке messages
+        data_attrs=None,  # данные для события класса kChat передаются в списке messages
+        messages=[message]  # сообщения чата
+    )
+    print(f"Getting message event: OK\n{message_event}")
+
+    return message_event
+
+
+def get_default_event(text: str):
+    sender = DemoSkypePerson("OwnCloud error")
+    receiver = DemoSkypePerson("All")
+    message = ExampleChatMsg(
+        text=text,  # текст сообщения
+        sent_time="now",  # время посылки сообщения
+        sender_no=0  # номер отправителя в списке evt_senders
+    )
+    message_event = ExampleDescription(
+        name="OwnCloud_test_message_name2",  # название примера, будет добавлено в атрибуты события
+        evt_class=pushapi.ttypes.EventClass.kChat,  # класс события - kChat
+        service="im_skype",
+        senders=[sender],  # отправители - для примера добавлен один пользователь skype
+        receivers=[receiver],  # получатели - для примера добавлены 2 пользователя skype
+        data_file=None,  # данные для события класса kChat передаются в списке messages
+        data_attrs=None,  # данные для события класса kChat передаются в списке messages
+        messages=[message]  # сообщения чата
+    )
+
+    return message_event
+
+
+def send_message_to_traffic_monitor(event: ExampleDescription) -> None:
+    sender = OwnCloud(
+        event=event, host=HOST_DFL, port=PORT_DFL, name=NAME_DFL, token=TOKEN_DFL
+    )
+    sender.run()
 
 
 @app.route('/get_hook', methods=["POST"])
 def get_hook():
     if request.method == "POST":
         if request.is_json:
+            data = {}
+            text = ''
             try:
-                message: str = get_message(request.json)
+                data: dict = request.json
+                print(data)
             except KeyError as err:
-                message: str = f"Не смог распознать данные от OwnCloud: {err}"
+                text = f"Не смог распознать данные от OwnCloud: {err}"
+                print(text)
             except Exception as err:
-                message: str = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
-            send_message_to_traffic_monitor(message)
+                text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
+                print(text)
+
+            message_event: ExampleDescription = get_message_event(data, text)
+            send_message_to_traffic_monitor(message_event)
         else:
             print("Data:", request.data)
         return {"result": "OK"}

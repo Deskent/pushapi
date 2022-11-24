@@ -179,26 +179,14 @@ class DemoEmailPerson(wrappers.PersonIdentity):
         super(DemoEmailPerson, self).__init__(contacts)
 
 
-def create_event():
-    sender_own_cloud = DemoEmailPerson(email="own_cloud_sender@mail.ru")
-    receiver_own_cloud = DemoEmailPerson(email="own_cloud_reveiver@mail.ru")
-    own_cloud_data_attrs = [
-        # обязательные атрибуты
-        pushapi.Attribute(constants.data_attr_file_filename, "own_cloud_test.txt"),
-        # pushapi.Attribute(constants.data_attr_file_source_file_path, "./own_cloud_test.txt"),
-        pushapi.Attribute(constants.data_attr_file_destination_file_path, "own_cloud/temp")
-    ]
-    event = ExampleDescription(
-        name="OwnCloud_test",  # название примера, будет добавлено в атрибуты события
-        evt_class=pushapi.EventClass.kChat,  # класс события - kFileExchange
-        service="own_cloud_service",  # сервис события -
-        senders=[sender_own_cloud],  # отправители
-        receivers=[receiver_own_cloud],  # получатель
-        data_file="own_cloud_test.txt",  # пересылаемые данные
-        data_attrs=own_cloud_data_attrs,  # атрибуты данных - требуется задание имени файла
-        messages=None  # сообщения чата - должны быть None для событий класса kFileExchange
-    )
-    return event
+class DemoSkypePerson(wrappers.PersonIdentity):
+    '''Идентификация персоны с контактом skype.'''
+    def __init__(self, skype_id):
+        '''Формирует идентификацию персоны с контактом skype.
+        :param skype_id: идентификатор пользователя в скайпе
+        :type skype_id: str
+        '''
+        super(DemoSkypePerson, self).__init__([wrappers.SkypeContact(skype_id)])
 
 
 def get_message_event(message: str):
