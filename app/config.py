@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     PORT_DFL:  int
     NAME_DFL: str
     TOKEN_DFL: str
+    TELEGRAM_ID: str = ''
+    TELEBOT_TOKEN: str = ''
 
 
 BASE_DIR = Path(__file__).parent
