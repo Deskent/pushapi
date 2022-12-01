@@ -137,4 +137,4 @@ def get_hook():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=8989, load_dotenv=True)
+    app.run(debug=settings.DEBUG, host=settings.APP_HOST, port=settings.APP_PORT)
