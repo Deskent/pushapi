@@ -61,7 +61,7 @@ logger_conf = {
     "loggers": {
         "pushapi": {
             "level": log_level,
-            "handlers": ['console', 'errors'],
+            "handlers": ['console', 'errors', 'all'],
             "filters": [],
             "propagate": 1,
         }
