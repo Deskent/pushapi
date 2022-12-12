@@ -113,6 +113,18 @@ def send_message_to_traffic_monitor(event: ExampleDescription) -> None:
 
 @app.route('/get_hook', methods=["POST"])
 def get_hook():
+    """
+    {
+        'name': 'help.txt',
+        'size': 788,
+        'path': '/Bitrix1/files/help.txt',
+        'internalPath': 'files/help.txt',
+        'id': 21394,
+        'owner': 'Bitrix1',
+        'datetime': 1666779532
+    }
+    :return:
+    """
     if request.method == "POST":
         if request.is_json:
             data = {}
