@@ -43,18 +43,21 @@ logger_conf = {
             "formatter": "base",
             "stream": sys.stdout
         },
-        "all": {
-            "class": 'logging.FileHandler',
-            "level": log_level,
+        'all': {
+            "class": "logging.handlers.RotatingFileHandler",
+            "backupCount": 2,
+            "encoding": None,
+            "delay": 0,
+            "level": "NOTSET",
             "formatter": "base",
-            "filename": f"{logs_dir_name}/all.log",
-            "mode": "a"
+            "filename": str(logs_dir_full_path / 'all.log'),
+            "mode": "a",
         },
         "errors": {
             "class": 'logging.FileHandler',
             "level": 'ERROR',
             "formatter": "base",
-            "filename": f"{logs_dir_name}/errors.log",
+            "filename": f"{logs_dir_full_path}/errors.log",
             "mode": "a"
         }
     },
