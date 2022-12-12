@@ -15,6 +15,8 @@ app = Flask(__name__)
 
 logs_dir_name = 'logs'
 logs_dir_full_path = Path().cwd() / logs_dir_name
+if not logs_dir_full_path.exists():
+    logs_dir_full_path.mkdir(parents=True)
 log_level = "DEBUG" if settings.DEBUG else "WARNING"
 
 logger_conf = {
