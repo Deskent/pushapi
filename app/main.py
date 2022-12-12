@@ -46,13 +46,9 @@ def create_message_instance(data: dict, text: str = '') -> ExampleChatMsg:
 
 
 def get_message_event(data: dict, text: str = '') -> ExampleDescription:
-    logger.debug("Getting message event...")
     message: ExampleChatMsg = create_message_instance(data, text)
-    logger.debug(f"Got message instance: {message}")
     sender = DemoSkypePerson(data.get('owner', "All"))
-    logger.debug(f"Sender: {sender}")
     receiver = DemoSkypePerson(data.get('receiver', "All"))
-    logger.debug(f"Receiver: {receiver}")
 
     message_event = ExampleDescription(
         name="OwnCloud_test_message_name2",  # название примера, будет добавлено в атрибуты события
@@ -108,7 +104,6 @@ def get_hook():
     if request.method == "POST":
         if request.is_json:
             logger.debug("Sending message...")
-            data = {}
             text = ''
             try:
                 data: dict = request.json

@@ -46,9 +46,10 @@ logger_conf = {
         'all': {
             "class": "logging.handlers.RotatingFileHandler",
             "backupCount": 2,
-            "encoding": None,
-            "delay": 0,
-            "level": "NOTSET",
+            "maxBytes": 5 * 1024 * 1024,
+            "encoding": "utf-8",
+            "delay": False,
+            "level": log_level,
             "formatter": "base",
             "filename": str(logs_dir_full_path / 'all.log'),
             "mode": "a",
