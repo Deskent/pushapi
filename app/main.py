@@ -1,60 +1,15 @@
-import sys
 from datetime import datetime
-from pathlib import Path
 
 import requests
 from flask import Flask, request
-import logging.config
 
 import pushapi
 import pushapi.ttypes
-from config import settings
-from sender import OwnCloud, ExampleChatMsg, ExampleDescription, DemoSkypePerson
+from config import settings, logger
+from sender import TrafficMonitor, ExampleChatMsg, ExampleDescription, DemoSkypePerson
 
 app = Flask(__name__)
 
-logs_dir_name = 'logs'
-logs_dir_full_path = Path().cwd() / logs_dir_name
-if not logs_dir_full_path.exists():
-    logs_dir_full_path.mkdir(parents=True)
-log_level = "DEBUG" if settings.DEBUG else "WARNING"
-
-logger_conf = {
-    "version": 1,
-    "disable_existing_loggers": True,
-    "formatters": {
-        "base": {
-            "format": '[%(asctime)s] %(levelname)s [%(filename)s:%(name)s.%(funcName)s:%(lineno)d]: %(message)s',
-            'datefmt': '%Y-%m-%d %H:%M:%S'
-        }
-    },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "level": log_level,
-            "formatter": "base",
-            "stream": sys.stdout
-        },
-        "errors": {
-            "class": 'logging.FileHandler',
-            "level": 'ERROR',
-            "formatter": "base",
-            "filename": f"{logs_dir_name}/errors.log",
-            "mode": "a"
-        }
-    },
-    "loggers": {
-        "pushapi": {
-            "level": log_level,
-            "handlers": ['console', 'errors'],
-            "filters": [],
-            "propagate": 1,
-        }
-    }
-}
-
-logging.config.dictConfig(logger_conf)
-logger = logging.getLogger('pushapi')
 
 
 def send_message_to_user(message: str) -> None:
@@ -115,11 +70,11 @@ def get_message_event(data: dict, text: str = '') -> ExampleDescription:
 
 
 def send_message_to_traffic_monitor(event: ExampleDescription) -> None:
-    sender = OwnCloud(
+    sender = TrafficMonitor(
         event=event, host=settings.HOST_DFL, port=settings.PORT_DFL,
         name=settings.NAME_DFL, token=settings.TOKEN_DFL
     )
-    sender.run()
+    sender.send_message()
 
 
 def get_message(data: dict) -> str:

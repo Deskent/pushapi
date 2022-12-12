@@ -337,11 +337,8 @@ class Client(Iface):
          - event_id
          - abort
         """
-        print("Send EndEvent")
         self.send_EndEvent(event_id, abort)
-        print("Send recv_EndEvent")
         self.recv_EndEvent()
-        print("Endof")
 
     def send_EndEvent(self, event_id, abort):
         self._oprot.writeMessageBegin('EndEvent', TMessageType.CALL, self._seqid)
@@ -354,21 +351,15 @@ class Client(Iface):
 
     def recv_EndEvent(self):
         iprot = self._iprot
-        print("Read Message Begin")
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
             x = TApplicationException()
-            print("read")
             x.read(iprot)
-            print("Read Message End")
             iprot.readMessageEnd()
             raise x
 
-        print("Result creation")
         result = EndEvent_result()
-        print("Result read")
         result.read(iprot)
-        print(f"Result readMessageEnd\n{result}")
         iprot.readMessageEnd()
         if result.ex1 is not None:
             raise result.ex1
