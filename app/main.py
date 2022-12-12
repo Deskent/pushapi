@@ -121,6 +121,7 @@ def get_hook():
 
             message_event: ExampleDescription = get_message_event(data, text)
             send_message_to_traffic_monitor(message_event)
+            print("Message sent.")
         return {"result": "OK"}
 
 
