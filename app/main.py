@@ -11,8 +11,6 @@ app = Flask(__name__)
 
 
 def create_message_instance(data: dict, text: str = '') -> ExampleChatMsg:
-    logger.debug("Getting message instance...")
-
     if not text:
         text: str = get_message(data)
         logger.debug(f"Got message text: {text}")
@@ -57,7 +55,7 @@ def get_message(data: dict) -> str:
     owner: str = data.get('owner', "Owner error")
     date_time: datetime = datetime.fromtimestamp(data.get('datetime'))
     return (
-        "В OwnCloud загружен файл:\n"
+        "\nВ OwnCloud загружен файл:\n"
         f"Владелец: {owner}\n"
         f"Имя файла: {file_name}\n"
         f"Размер файла (bytes): {data.get('size')}\n"
