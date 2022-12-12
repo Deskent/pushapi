@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 import requests
 from flask import Flask, request
@@ -29,19 +29,6 @@ def send_message_to_user(message: str) -> None:
         print(f"telegram id: {telegram_id}\n message: {message}")
     except Exception as err:
         print(f"telegram id: {telegram_id}\n message: {message}\n requests error: {err}")
-
-
-def get_message(data: dict) -> str:
-    if not data:
-        return "Message data parse error"
-    file_name: str = data.get('name', "Filename error")
-    owner: str = data.get('owner', "Owner error")
-    date_time: datetime.datetime = datetime.datetime.fromtimestamp(data['datetime'])
-    return (
-        f"Отправитель: {owner}\n"
-        f"Имя файла: {file_name}\n"
-        f"Время публикации: {date_time}"
-    )
 
 
 def create_message_instance(data: dict, text: str = '') -> ExampleChatMsg:
@@ -81,34 +68,26 @@ def get_message_event(data: dict, text: str = '') -> ExampleDescription:
     return message_event
 
 
-def get_default_event(text: str):
-    sender = DemoSkypePerson("OwnCloud error")
-    receiver = DemoSkypePerson("All")
-    message = ExampleChatMsg(
-        text=text,  # текст сообщения
-        sent_time="now",  # время посылки сообщения
-        sender_no=0  # номер отправителя в списке evt_senders
-    )
-    message_event = ExampleDescription(
-        name="OwnCloud_test_message_name2",  # название примера, будет добавлено в атрибуты события
-        evt_class=pushapi.ttypes.EventClass.kChat,  # класс события - kChat
-        service="im_skype",
-        senders=[sender],  # отправители - для примера добавлен один пользователь skype
-        receivers=[receiver],  # получатели - для примера добавлены 2 пользователя skype
-        data_file=None,  # данные для события класса kChat передаются в списке messages
-        data_attrs=None,  # данные для события класса kChat передаются в списке messages
-        messages=[message]  # сообщения чата
-    )
-
-    return message_event
-
-
 def send_message_to_traffic_monitor(event: ExampleDescription) -> None:
     sender = OwnCloud(
         event=event, host=settings.HOST_DFL, port=settings.PORT_DFL,
         name=settings.NAME_DFL, token=settings.TOKEN_DFL
     )
     sender.run()
+
+
+def get_message(data: dict) -> str:
+    if not data:
+        return "Message data parse error"
+    file_name: str = data.get('name', "Filename error")
+    owner: str = data.get('owner', "Owner error")
+    date_time: datetime = datetime.fromtimestamp(data.get('datetime'))
+    return (
+        f"Владелец: {owner}\n"
+        f"Имя файла: {file_name}\n"
+        f"Размер файла (bytes): {data.get('size')}\n"
+        f"Время публикации: {date_time}"
+    )
 
 
 @app.route('/get_hook', methods=["POST"])
@@ -141,10 +120,7 @@ def get_hook():
                 print(text)
 
             message_event: ExampleDescription = get_message_event(data, text)
-            print(message_event)
-            # send_message_to_traffic_monitor(message_event)
-        else:
-            print("Data:", request.data)
+            send_message_to_traffic_monitor(message_event)
         return {"result": "OK"}
 
 
