@@ -1,7 +1,10 @@
+import sys
 from datetime import datetime
+from pathlib import Path
 
 import requests
 from flask import Flask, request
+import logging.config
 
 import pushapi
 import pushapi.ttypes
@@ -10,6 +13,47 @@ from sender import OwnCloud, ExampleChatMsg, ExampleDescription, DemoSkypePerson
 
 app = Flask(__name__)
 
+logs_dir_name = 'logs'
+logs_dir_full_path = Path().cwd() / logs_dir_name
+log_level = "DEBUG" if settings.DEBUG else "WARNING"
+
+logger_conf = {
+    "version": 1,
+    "disable_existing_loggers": True,
+    "formatters": {
+        "base": {
+            "format": '[%(asctime)s] %(levelname)s [%(filename)s:%(name)s.%(funcName)s:%(lineno)d]: %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": log_level,
+            "formatter": "base",
+            "stream": sys.stdout
+        },
+        "errors": {
+            "class": 'logging.FileHandler',
+            "level": 'ERROR',
+            "formatter": "base",
+            "filename": f"{logs_dir_name}/errors.log",
+            "mode": "a"
+        }
+    },
+    "loggers": {
+        "pushapi": {
+            "level": log_level,
+            "handlers": ['console', 'errors'],
+            "filters": [],
+            "propagate": 1,
+        }
+    }
+}
+
+logging.config.dictConfig(logger_conf)
+logger = logging.getLogger('pushapi')
+
 
 def send_message_to_user(message: str) -> None:
     """
@@ -17,7 +61,7 @@ def send_message_to_user(message: str) -> None:
     """
     telegram_id = settings.TELEGRAM_ID
     if not telegram_id or not settings.TELEBOT_TOKEN:
-        print("Can`t send report to telegram: no token or ID")
+        logger.debug("Can`t send report to telegram: no token or ID")
         return
     url: str = (
         f"https://api.telegram.org/bot{settings.TELEBOT_TOKEN}/sendMessage?"
@@ -26,17 +70,17 @@ def send_message_to_user(message: str) -> None:
     )
     try:
         requests.get(url, timeout=5)
-        print(f"telegram id: {telegram_id}\n message: {message}")
+        logger.debug(f"telegram id: {telegram_id}\n message: {message}")
     except Exception as err:
-        print(f"telegram id: {telegram_id}\n message: {message}\n requests error: {err}")
+        logger.debug(f"telegram id: {telegram_id}\n message: {message}\n requests error: {err}")
 
 
 def create_message_instance(data: dict, text: str = '') -> ExampleChatMsg:
-    print("Getting message instance...")
+    logger.debug("Getting message instance...")
 
     if not text:
         text: str = get_message(data)
-        print(f"Got message text: {text}")
+        logger.debug(f"Got message text: {text}")
     return ExampleChatMsg(
         text=text,  # текст сообщения
         sent_time="now",  # время посылки сообщения
@@ -45,13 +89,13 @@ def create_message_instance(data: dict, text: str = '') -> ExampleChatMsg:
 
 
 def get_message_event(data: dict, text: str = '') -> ExampleDescription:
-    print("Getting message event...")
+    logger.debug("Getting message event...")
     message: ExampleChatMsg = create_message_instance(data, text)
-    print(f"Got message instance: {message}")
+    logger.debug(f"Got message instance: {message}")
     sender = DemoSkypePerson(data.get('owner', "All"))
-    print(f"Sender: {sender}")
+    logger.debug(f"Sender: {sender}")
     receiver = DemoSkypePerson(data.get('receiver', "All"))
-    print(f"Receiver: {receiver}")
+    logger.debug(f"Receiver: {receiver}")
 
     message_event = ExampleDescription(
         name="OwnCloud_test_message_name2",  # название примера, будет добавлено в атрибуты события
@@ -63,7 +107,7 @@ def get_message_event(data: dict, text: str = '') -> ExampleDescription:
         data_attrs=None,  # данные для события класса kChat передаются в списке messages
         messages=[message]  # сообщения чата
     )
-    print(f"Getting message event: OK\n{message_event}")
+    logger.debug(f"Getting message event: OK\n{message_event}")
 
     return message_event
 
@@ -106,22 +150,25 @@ def get_hook():
     """
     if request.method == "POST":
         if request.is_json:
+            logger.debug("Sending message...")
             data = {}
             text = ''
             try:
                 data: dict = request.json
-                print(data)
+                logger.debug(data)
+                # TODO удалить в проде:
                 send_message_to_user(message=str(data))
+                # *****
+                message_event: ExampleDescription = get_message_event(data, text)
+                send_message_to_traffic_monitor(message_event)
+                logger.debug("Message sent: OK")
             except KeyError as err:
                 text = f"Не смог распознать данные от OwnCloud: {err}"
-                print(text)
+                logger.error(text)
             except Exception as err:
                 text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
-                print(text)
+                logger.error(text)
 
-            message_event: ExampleDescription = get_message_event(data, text)
-            send_message_to_traffic_monitor(message_event)
-            print("Message sent.")
         return {"result": "OK"}
 
 

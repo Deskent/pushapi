@@ -80,10 +80,8 @@ class OwnCloud(object):
         :param demo_data: данные примера
         '''
         # формируем трифтовую структуру события
-        print(f"Make event {event.name}")
         evt = self.make_demo_event(event)
         # отсылаем на сервер
-        print(f"Sending event: {event.name}")
         guid = self._send_to_server(evt)
         # сообщаем о выполнении
         print("%s event successfully sent to PushAPI server with guid %s" % (event.name, guid))
@@ -94,44 +92,37 @@ class OwnCloud(object):
         :type evt: pushapi.Event
         '''
 
-        print("Begin event")
         event_id = self._client.BeginEvent(evt, self._creds)
         abort_flag = False
         guid = None
         try:
             for data in evt.evt_data:
-                print("Begin Stream")
                 stream_id = self._client.BeginStream(event_id, data.data_id)
                 try:
-                    print("Send Stream")
                     self._client.SendStreamData(event_id, stream_id, data.content)
                 finally:
-                    print("End Stream")
                     self._client.EndStream(event_id, stream_id)
-            print("GetEventDatabase")
             guid = self._client.GetEventDatabaseId(event_id)
         except:
             abort_flag = True  # ошибка, завершаем событие с флагом abort
             raise
         finally:
-            print("End Event")
             self._client.EndEvent(event_id, abort_flag)
 
-            print(f"End Event: OK\nGuid: {guid}")
         return guid
 
-    def make_demo_event(self, demo_data):
+    def make_demo_event(self, data):
         '''По описанию примера строит объект Event'''
-        evt = wrappers.Event(demo_data.evt_class, demo_data.service)
-        self.make_event_attributes(evt, demo_data.name)  # атрибуты события
-        evt.add_identities(demo_data.senders, demo_data.receivers)  # добавляем отправителей и получателей
+        evt = wrappers.Event(data.evt_class, data.service)
+        self.make_event_attributes(evt, data.name)  # атрибуты события
+        evt.add_identities(data.senders, data.receivers)  # добавляем отправителей и получателей
         # добавляем потоки данных, если они заданы
-        if demo_data.data_file:
-            evt.evt_data = [EventDataFromFile(demo_data.data_file, demo_data.data_attrs)]
+        if data.data_file:
+            evt.evt_data = [EventDataFromFile(data.data_file, data.data_attrs)]
         # добавляем сообщения чата, если они заданы
-        if demo_data.messages:
+        if data.messages:
             evt.evt_messages = []
-            for msg in demo_data.messages:
+            for msg in data.messages:
                 assert msg.sender_no < len(evt.evt_senders)  # проверим корректность - такой отправитель есть в списке
                 sender_id = evt.evt_senders[msg.sender_no].identity_id  # и получим его идентификатор
                 # добавим сообщение к списку
