@@ -1780,14 +1780,11 @@ class EndEvent_result(object):
         self.ex3 = ex3
 
     def read(self, iprot):
-        print("EnvEvent_result read...")
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
             iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
             return
-        print("readStructBegin...")
         iprot.readStructBegin()
         while True:
-            print("readFieldBegin...")
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
