@@ -59,7 +59,7 @@ def get_message(data: dict) -> str:
         f"Владелец: {owner}\n"
         f"Имя файла: {file_name}\n"
         f"Размер файла (bytes): {data.get('size')}\n"
-        f"Время публикации: {date_time}"
+        f"Дата создания файла: {date_time}"
     )
 
 
