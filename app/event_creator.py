@@ -60,6 +60,8 @@ class EventCreator:
     def _get_receiver(self):
         receiver: str = self.data.get('share_with', 'All')
         logger.debug(f"\nReceiver: {self.receiver}")
+        if not receiver:
+            receiver = "All"
         self.receiver = SkypePerson(receiver)
         logger.debug(f"\nSELF Receiver: {self.receiver}")
         return self.receiver
