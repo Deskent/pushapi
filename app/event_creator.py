@@ -96,8 +96,8 @@ class EventCreator:
 
 class NodeCreateEvent(EventCreator):
 
-    def __init__(self, data: dict):
-        super().__init__(data)
+    def __init__(self, data: dict, text: str = ''):
+        super().__init__(data, text)
         self.request_type = 'OwnCloud: загружен файл'
 
     def get_message(self):
@@ -118,8 +118,8 @@ class NodeCreateEvent(EventCreator):
 class NodeDownloadEvent(EventCreator):
     """Event creating when file in OwnCloud downloaded"""
 
-    def __init__(self, data: dict):
-        super().__init__(data)
+    def __init__(self, data: dict, text: str = ''):
+        super().__init__(data, text)
         self.request_type = 'OwnCloud: файл скачан'
 
     def get_message(self) -> str:
@@ -141,8 +141,8 @@ class NodeDownloadEvent(EventCreator):
 
 class NodeShareEvent(EventCreator):
 
-    def __init__(self, data: dict):
-        super().__init__(data)
+    def __init__(self, data: dict, text: str = ''):
+        super().__init__(data, text)
         self.request_type = 'OwnCloud: открыт доступ к файлу'
 
     def _get_share_type(self):
@@ -177,6 +177,6 @@ class NodeShareEvent(EventCreator):
 class NodeShareChangePermissionEvent(NodeShareEvent):
     """Event creating when file permission changed in OwnCloud"""
 
-    def __init__(self, data: dict):
-        super().__init__(data)
+    def __init__(self, data: dict, text: str = ''):
+        super().__init__(data, text)
         self.request_type = 'OwnCloud: права на доступ к файлу изменены'
