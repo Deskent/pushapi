@@ -54,10 +54,12 @@ class EventCreator:
 
     def _get_sender(self):
         self.sender = SkypePerson(self.data.get('owner'))
+        logger.debug(f"Sender: {self.sender}")
         return self.sender
 
     def _get_receiver(self):
         self.receiver = SkypePerson(self.data.get('share_with', 'All'))
+        logger.debug(f"Receiver: {self.receiver}")
         return self.receiver
 
     def _create_message_instance(self):
@@ -89,6 +91,10 @@ class EventCreator:
             data_attrs=None,
         )
 
+    @staticmethod
+    def _get_from_timestamp(stamp: int) -> datetime:
+        return datetime.fromtimestamp(stamp)
+
     @abstractmethod
     def get_message(self) -> str:
         pass
@@ -103,7 +109,7 @@ class NodeCreateEvent(EventCreator):
     def get_message(self):
         file_name: str = self.data.get('name', 'Filename error')
         owner: str = self.data.get('owner', 'Owner error')
-        date_time: datetime = datetime.fromtimestamp(self.data.get('datetime'))
+        date_time: datetime = self._get_from_timestamp(self.data.get('datetime'))
         text = (
             f'\n{self.request_type}:\n'
             f'Владелец: {owner}\n'
@@ -126,7 +132,7 @@ class NodeDownloadEvent(EventCreator):
         file_name: str = self.data.get('name', 'Filename error')
         owner: str = self.data.get('owner', 'Owner error')
         downloaded_by: str = self.data.get('downloaded_by', 'Downloader error')
-        date_time: datetime = datetime.fromtimestamp(self.data.get('datetime'))
+        date_time: datetime = self._get_from_timestamp(self.data.get('datetime'))
         text = (
             f'\n{self.request_type}:\n'
             f'Владелец: {owner}\n'
@@ -151,7 +157,7 @@ class NodeShareEvent(EventCreator):
         share_types = {
             '0': f'\nДля пользователя: {self.data.get("share_with")}',
             '1': f'\nДля группы: {self.data.get("share_with")}',
-            '3': f'\nПо ссылке: {self.data.get("share_with")}',
+            '3': f'\nПо ссылке',
             '4': f'\nГостям: {self.data.get("share_with")}',
         }
         return share_types.get(share_type, 'Share type not defined')
@@ -163,8 +169,10 @@ class NodeShareEvent(EventCreator):
             f'\n{self.request_type}:\n'
             f'\nВладелец: {owner}'
             f'\nИмя файла: {file_name}'
-            f'\nИстекает: {self.data.get("expiration")}'
         )
+        expiration = self.data.get("expiration")
+        if expiration:
+            text += f'\nИстекает: {self._get_from_timestamp(expiration)}'
 
         text += self._get_share_type()
         if self.data.get('passwordEnabled'):

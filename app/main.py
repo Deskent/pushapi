@@ -71,6 +71,8 @@ def get_hook():
             event: EventDescription = _get_event(data, text)
             send_message_to_traffic_monitor(event)
             logger.debug("Message sent: OK")
+            send_message_to_user("Message sent: OK")
+
             # except KeyError as err:
             #     text = f"Не смог распознать данные от OwnCloud: {err}"
             #     logger.error(text)
