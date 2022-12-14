@@ -22,7 +22,7 @@ env_file = BASE_DIR.parent / '.env'
 settings = Settings(_env_file=env_file, _env_file_encoding='utf-8')
 
 logs_dir_name = 'logs'
-logs_dir_full_path = Path().cwd() / logs_dir_name
+logs_dir_full_path = BASE_DIR / logs_dir_name
 if not logs_dir_full_path.exists():
     logs_dir_full_path.mkdir(parents=True)
 log_level = "DEBUG" if settings.DEBUG else "WARNING"

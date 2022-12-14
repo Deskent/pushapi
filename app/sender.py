@@ -6,7 +6,7 @@ from collections import namedtuple
 
 import pushapi.constants as constants
 import pushapi.ttypes as pushapi
-import pushapi_wrappers as wrappers
+from pushapi import pushapi_wrappers as wrappers
 from config import logger
 
 
