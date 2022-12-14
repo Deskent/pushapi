@@ -63,20 +63,20 @@ def get_hook():
         if request.is_json:
             logger.debug("Sending message...")
             text = ''
-            try:
-                data: dict = request.json
-                logger.debug(data)
-                send_message_to_user(str(data))
+            # try:
+            data: dict = request.json
+            logger.debug(data)
+            send_message_to_user(str(data))
 
-                event: EventDescription = _get_event(data, text)
-                send_message_to_traffic_monitor(event)
-                logger.debug("Message sent: OK")
-            except KeyError as err:
-                text = f"Не смог распознать данные от OwnCloud: {err}"
-                logger.error(text)
-            except Exception as err:
-                text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
-                logger.error(text)
+            event: EventDescription = _get_event(data, text)
+            send_message_to_traffic_monitor(event)
+            logger.debug("Message sent: OK")
+            # except KeyError as err:
+            #     text = f"Не смог распознать данные от OwnCloud: {err}"
+            #     logger.error(text)
+            # except Exception as err:
+            #     text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
+            #     logger.error(text)
 
         return {"result": "OK"}
 

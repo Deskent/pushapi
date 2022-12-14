@@ -137,17 +137,17 @@ class TrafficMonitor(object):
         if event_name:
             evt.add_attribute("event_name", event_name)
         # можно добавить другие атрибуты - evt.add_attribute("my_attr_name", "my_attr_value")
-
-
-ExampleChatMsg = namedtuple(
-    "ExampleChatMsg",
-    ["text", "sent_time", "sender_no"]
-)
-# Класс для описания примера
-ExampleDescription = namedtuple(
-    "ExampleDescription",
-    ["name", "evt_class", "service", "senders", "receivers", "data_file", "data_attrs", "messages"]
-)
+#
+#
+# ExampleChatMsg = namedtuple(
+#     "ExampleChatMsg",
+#     ["text", "sent_time", "sender_no"]
+# )
+# # Класс для описания примера
+# ExampleDescription = namedtuple(
+#     "ExampleDescription",
+#     ["name", "evt_class", "service", "senders", "receivers", "data_file", "data_attrs", "messages"]
+# )
 
 # Классы-надстройки над Identity для создания персон в примерах
 class DemoEmailPerson(wrappers.PersonIdentity):
@@ -163,13 +163,13 @@ class DemoEmailPerson(wrappers.PersonIdentity):
             wrappers.EmailContact(email)
         ]
         super(DemoEmailPerson, self).__init__(contacts)
-
-
-class DemoSkypePerson(wrappers.PersonIdentity):
-    '''Идентификация персоны с контактом skype.'''
-    def __init__(self, skype_id):
-        '''Формирует идентификацию персоны с контактом skype.
-        :param skype_id: идентификатор пользователя в скайпе
-        :type skype_id: str
-        '''
-        super(DemoSkypePerson, self).__init__([wrappers.SkypeContact(skype_id)])
+#
+#
+# class DemoSkypePerson(wrappers.PersonIdentity):
+#     '''Идентификация персоны с контактом skype.'''
+#     def __init__(self, skype_id):
+#         '''Формирует идентификацию персоны с контактом skype.
+#         :param skype_id: идентификатор пользователя в скайпе
+#         :type skype_id: str
+#         '''
+#         super(DemoSkypePerson, self).__init__([wrappers.SkypeContact(skype_id)])
