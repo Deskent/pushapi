@@ -57,29 +57,30 @@ def _get_event(data: dict, text: str = '') -> EventDescription:
     return creator(data, text).create_event()
 
 
+def _send_message(data: dict):
+    logger.debug("Sending message...")
+    text = ''
+    try:
+        logger.debug(data)
+        send_message_to_user(str(data))
+        event: EventDescription = _get_event(data, text)
+        send_message_to_traffic_monitor(event)
+        text = "Message sent: OK"
+        logger.debug(text)
+    except KeyError as err:
+        text = f"Не смог распознать данные от OwnCloud: {err}"
+        logger.error(text)
+    except Exception as err:
+        text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
+        logger.error(text)
+    send_message_to_user(text)
+
+
 @app.route('/get_hook', methods=["POST"])
 def get_hook():
     if request.method == "POST":
         if request.is_json:
-            logger.debug("Sending message...")
-            text = ''
-            # try:
-            data: dict = request.json
-            logger.debug(data)
-            send_message_to_user(str(data))
-
-            event: EventDescription = _get_event(data, text)
-            send_message_to_traffic_monitor(event)
-            logger.debug("Message sent: OK")
-            send_message_to_user("Message sent: OK")
-
-            # except KeyError as err:
-            #     text = f"Не смог распознать данные от OwnCloud: {err}"
-            #     logger.error(text)
-            # except Exception as err:
-            #     text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
-            #     logger.error(text)
-
+            _send_message(request.json)
         return {"result": "OK"}
 
 
