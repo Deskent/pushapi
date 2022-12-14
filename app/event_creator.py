@@ -48,12 +48,20 @@ class EventCreator:
         self.text: str = text
         self.sender: Optional[SkypePerson] = None
         self.receiver: Optional[SkypePerson] = None
-        self.message: str = ''
         self._request_type: str = 'OwnCloud: unrecognized request type'
         self.event_type: pushapi.ttypes.EventClass = pushapi.ttypes.EventClass.kChat
+        self.file_name: str = Path(self.data['path']).name
+        self.owner: str = self.data['owner']
+        self.message: str = (
+            f'\n{self._request_type}:\n'
+            f'Владелец: {self.owner}\n'
+            f'Имя файла: {self.file_name}\n'
+        )
 
     def _get_sender(self):
-        self.sender = SkypePerson(self.data.get('owner'))
+        self.sender = SkypePerson(self.owner)
+        if not self.sender:
+            self.sender = 'All'
         logger.debug(f"Sender: {self.sender}")
         return self.sender
 
@@ -110,18 +118,13 @@ class NodeCreateEvent(EventCreator):
         self.request_type = 'OwnCloud: загружен файл'
 
     def get_message(self):
-        file_name: str = self.data.get('name', 'Filename error')
-        owner: str = self.data.get('owner', 'Owner error')
         date_time: datetime = self._get_from_timestamp(self.data.get('datetime'))
-        text = (
-            f'\n{self.request_type}:\n'
-            f'Владелец: {owner}\n'
-            f'Имя файла: {file_name}\n'
+        self.message += (
             f'Размер файла (bytes): {self.data.get("size")}\n'
             f'Дата создания файла: {date_time}'
         )
 
-        return text
+        return self.message
 
 
 class NodeDownloadEvent(EventCreator):
@@ -132,20 +135,15 @@ class NodeDownloadEvent(EventCreator):
         self.request_type = 'OwnCloud: файл скачан'
 
     def get_message(self) -> str:
-        file_name: str = self.data.get('name', 'Filename error')
-        owner: str = self.data.get('owner', 'Owner error')
         downloaded_by: str = self.data.get('downloaded_by', 'Downloader error')
         date_time: datetime = self._get_from_timestamp(self.data.get('datetime'))
-        text = (
-            f'\n{self.request_type}:\n'
-            f'Владелец: {owner}\n'
+        self.message += (
             f'Скачал: {downloaded_by}\n'
-            f'Имя файла: {file_name}\n'
             f'Размер файла (bytes): {self.data.get("size")}\n'
             f'Дата создания файла: {date_time}'
         )
 
-        return text
+        return self.message
 
 
 class NodeShareEvent(EventCreator):
@@ -166,23 +164,16 @@ class NodeShareEvent(EventCreator):
         return share_types.get(share_type, 'Share type not defined')
 
     def get_message(self) -> str:
-        file_name: str = Path(self.data.get('path', 'Filename error')).name
-        owner: str = self.data.get('owner', 'Owner error')
-        text = (
-            f'\n{self._request_type}:\n'
-            f'\nВладелец: {owner}'
-            f'\nИмя файла: {file_name}'
-        )
         expiration = self.data.get("expiration")
         if expiration:
-            text += f'\nИстекает: {self._get_from_timestamp(expiration)}'
+            self.message += f'\nИстекает: {self._get_from_timestamp(expiration)}'
 
-        text += self._get_share_type()
+        self.message += self._get_share_type()
         if self.data.get('passwordEnabled'):
-            text += '\nТребуется пароль.'
-        logger.debug(text)
+            self.message += '\nТребуется пароль.'
+        logger.debug(self.message)
 
-        return text
+        return self.message
 
 
 class NodeShareChangePermissionEvent(NodeShareEvent):
