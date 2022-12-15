@@ -136,12 +136,13 @@ class NodeDownloadEvent(EventCreator):
 
     def get_message(self) -> str:
         downloaded_by: str = self.data.get('downloaded_by', 'Downloader error')
-        date_time: datetime = self._get_from_timestamp(self.data.get('datetime'))
         self.message += (
             f'Скачал: {downloaded_by}\n'
             f'Размер файла (bytes): {self.data.get("size")}\n'
-            f'Дата создания файла: {date_time}'
         )
+        timestamp = self.data.get("timestamp")
+        if timestamp:
+            self.message += f'\nВремя: {self._get_from_timestamp(timestamp)}'
 
         return self.message
 
@@ -167,9 +168,7 @@ class NodeShareEvent(EventCreator):
         expiration = self.data.get("expiration")
         if expiration:
             self.message += f'\nИстекает: {self._get_from_timestamp(expiration)}'
-        timestamp = self.data.get("timestamp")
-        if timestamp:
-            self.message += f'\nВремя: {self._get_from_timestamp(timestamp)}'
+
 
         self.message += self._get_share_type()
         if self.data.get('passwordEnabled'):
