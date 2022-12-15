@@ -53,7 +53,6 @@ class EventCreator:
         self.file_name: str = Path(self.data['path']).name
         self.owner: str = self.data['owner']
         self.message: str = (
-            f'\n{self.request_type}:\n'
             f'Владелец: {self.owner}\n'
             f'Имя файла: {self.file_name}\n'
         )
@@ -116,6 +115,7 @@ class NodeCreateEvent(EventCreator):
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
         self.request_type = 'OwnCloud: загружен файл'
+        self.message = f'\n{self.request_type}:\n' + self.message
 
     def get_message(self):
         date_time: datetime = self._get_from_timestamp(self.data.get('datetime'))
@@ -133,8 +133,10 @@ class NodeDownloadEvent(EventCreator):
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
         self.request_type = 'OwnCloud: файл скачан'
+        self.message = f'\n{self.request_type}:\n' + self.message
 
     def get_message(self) -> str:
+
         downloaded_by: str = self.data.get('downloaded_by', 'Downloader error')
         self.message += (
             f'Скачал: {downloaded_by}\n'
@@ -152,6 +154,7 @@ class NodeShareEvent(EventCreator):
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
         self.request_type = 'OwnCloud: открыт доступ к файлу'
+        self.message = f'\n{self.request_type}:\n' + self.message
 
     def _get_share_type(self):
         share_type: str = str(self.data.get('share_type'))
@@ -169,7 +172,6 @@ class NodeShareEvent(EventCreator):
         if expiration:
             self.message += f'\nИстекает: {self._get_from_timestamp(expiration)}'
 
-
         self.message += self._get_share_type()
         if self.data.get('passwordEnabled'):
             self.message += '\nТребуется пароль.'
@@ -184,3 +186,4 @@ class NodeShareChangePermissionEvent(NodeShareEvent):
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
         self.request_type = 'OwnCloud: права на доступ к файлу изменены'
+        self.message = f'\n{self.request_type}:\n' + self.message
