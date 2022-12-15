@@ -62,9 +62,10 @@ def _send_message(request: Request):
     try:
         data = request.json
         file = request.files.get('file')
+        logger.debug(f"\n\nFILES: {request.files.items()}")
+
         if file:
             data['uploaded_file'] = file
-        logger.debug(type(file))
         logger.debug(data)
         send_message_to_user(str(data))
         event: EventDescription = _get_event(data, text)
