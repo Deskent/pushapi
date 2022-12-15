@@ -100,9 +100,9 @@ def get_hook():
 def get_file():
     """Get POST request and send it to Traffic Monitor"""
 
-    data = request.json
+    data = request.get_json()
     logger.info(data)
-
+    send_message_to_user(data)
     file = request.files.get('file')
     logger.info(f"\n\nFILE: {file}")
     text = "File sent..."
