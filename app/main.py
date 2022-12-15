@@ -71,31 +71,31 @@ def _send_message(request: Request) -> None:
 
     logger.debug("Sending message...")
     text = ''
-    try:
-        data = request.json
-        file = request.files.get('file')
-        req_json = request.get_json()
-        logger.debug(f"\n\nREQ JSON: {req_json}\n\n")
-        logger.debug(f"\n\nFILES: start...")
-        for elem in request.files.items():
-            logger.debug(f"\n\nFILES: {elem}")
-        logger.debug(f"\n\nFILES: FINISH")
+    data = request.json
+    file = request.files.get('file')
+    req_json = request.get_json()
+    logger.debug(f"\n\nREQ JSON: {req_json}\n\n")
+    logger.debug(f"\n\nFILES: start...")
+    for elem in request.files.items():
+        logger.debug(f"\n\nFILES: {elem}")
+    logger.debug(f"\n\nFILES: FINISH")
 
-        if file:
-            data['uploaded_file'] = file
-            file_event: EventDescription = FileTransmittingEvent(data, text).create_event()
-            send_message_to_traffic_monitor(file_event)
+    if file:
+        data['uploaded_file'] = file
+        file_event: EventDescription = FileTransmittingEvent(data, text).create_event()
+        send_message_to_traffic_monitor(file_event)
 
+    if request.is_json:
         event: EventDescription = _get_event(data, text)
         send_message_to_traffic_monitor(event)
         text = "Message sent: OK"
         logger.debug(text)
-    except KeyError as err:
-        text = f"Не смог распознать данные от OwnCloud: {err}"
-        logger.error(text)
-    except Exception as err:
-        text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
-        logger.error(text)
+    # except KeyError as err:
+    #     text = f"Не смог распознать данные от OwnCloud: {err}"
+    #     logger.error(text)
+    # except Exception as err:
+    #     text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
+    #     logger.error(text)
     send_message_to_user(text)
 
 
@@ -104,8 +104,7 @@ def get_hook():
     """Get POST request and send it to Traffic Monitor"""
 
     if request.method == "POST":
-        if request.is_json:
-            _send_message(request)
+        _send_message(request)
         return {"result": "OK"}
 
 
