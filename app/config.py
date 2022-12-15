@@ -6,15 +6,15 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    APP_HOST: str = "127.0.0.1"
-    APP_PORT: int = 8989
     HOST_DFL: str
     PORT_DFL: int
     NAME_DFL: str
     TOKEN_DFL: str
+    DEBUG: bool = False
+    APP_HOST: str = "127.0.0.1"
+    APP_PORT: int = 8989
     TELEGRAM_ID: str = ''
     TELEBOT_TOKEN: str = ''
-    DEBUG: bool = False
 
 
 BASE_DIR = Path(__file__).parent
