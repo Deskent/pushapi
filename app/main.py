@@ -62,11 +62,12 @@ def _send_message(request: Request):
     try:
         data = request.json
         file = request.files.get('file')
-        logger.debug(f"\n\nFILES: {request.files.items()}")
+        for elem in request.files.items():
+            logger.debug(f"\n\nFILES: {elem}")
 
         if file:
             data['uploaded_file'] = file
-        logger.debug(data)
+        logger.debug(f'\n{data}')
         send_message_to_user(str(data))
         event: EventDescription = _get_event(data, text)
         send_message_to_traffic_monitor(event)
