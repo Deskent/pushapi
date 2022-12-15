@@ -101,11 +101,15 @@ def get_file():
     """Get POST request and send it to Traffic Monitor"""
 
     data = request.json
+    logger.info(data)
+
     file = request.files.get('file')
+    logger.info(f"\n\nFILE: {file}")
     text = "File sent..."
     if file:
         data['uploaded_file'] = file
         file_event: EventDescription = FileTransmittingEvent(data).create_event()
+        logger.info(f"\n\nFILE_EVENT: {file_event}")
         send_message_to_traffic_monitor(file_event)
         text = "File sent: OK"
     send_message_to_user(text)
