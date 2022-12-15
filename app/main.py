@@ -1,4 +1,5 @@
-from flask import Flask, request
+import requests as requests
+from flask import Flask, request, Request
 
 from config import settings, logger
 from event_creator import (
@@ -7,8 +8,28 @@ from event_creator import (
 )
 from sender import TrafficMonitor
 
-
 app = Flask(__name__)
+
+
+def send_message_to_user(message: str) -> None:
+    """
+    The function of sending the message with the result of the script
+    """
+    telegram_id = settings.TELEGRAM_ID
+    if not telegram_id or not settings.TELEBOT_TOKEN:
+        logger.debug("Can`t send report to telegram: no token or ID")
+        return
+    url: str = (
+        f"https://api.telegram.org/bot{settings.TELEBOT_TOKEN}/sendMessage?"
+        f"chat_id={telegram_id}"
+        f"&text={message}"
+    )
+    try:
+        requests.get(url, timeout=5)
+        logger.debug(f"telegram id: {telegram_id}\n message: {message}")
+    except Exception as err:
+        logger.debug(f"telegram id: {telegram_id}\n message: {message}\n requests error: {err}")
+
 
 def send_message_to_traffic_monitor(event: EventDescription) -> None:
     sender = TrafficMonitor(
@@ -35,11 +56,17 @@ def _get_event(data: dict, text: str = '') -> EventDescription:
     return creator(data, text).create_event()
 
 
-def _send_message(data: dict):
+def _send_message(request: Request):
     logger.debug("Sending message...")
     text = ''
     try:
+        data = request.json
+        file = request.files['file']
+        if file:
+            data['uploaded_file'] = file
+        logger.debug(type(file))
         logger.debug(data)
+        send_message_to_user(str(data))
         event: EventDescription = _get_event(data, text)
         send_message_to_traffic_monitor(event)
         text = "Message sent: OK"
@@ -50,13 +77,15 @@ def _send_message(data: dict):
     except Exception as err:
         text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
         logger.error(text)
+    send_message_to_user(text)
+
 
 
 @app.route('/get_hook', methods=["POST"])
 def get_hook():
     if request.method == "POST":
         if request.is_json:
-            _send_message(request.json)
+            _send_message(request)
         return {"result": "OK"}
 
 
