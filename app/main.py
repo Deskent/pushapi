@@ -4,7 +4,7 @@ from flask import Flask, request, Request
 from config import settings, logger
 from event_creator import (
     EventDescription, NodeCreateEvent, NodeShareEvent, NodeDownloadEvent,
-    NodeShareChangePermissionEvent
+    NodeShareChangePermissionEvent, EventCreator, FileTransmittingEvent
 )
 from sender import TrafficMonitor
 
@@ -12,9 +12,8 @@ app = Flask(__name__)
 
 
 def send_message_to_user(message: str) -> None:
-    """
-    The function of sending the message with the result of the script
-    """
+    """Send message to telegram"""
+
     telegram_id = settings.TELEGRAM_ID
     if not telegram_id or not settings.TELEBOT_TOKEN:
         logger.debug("Can`t send report to telegram: no token or ID")
@@ -32,6 +31,8 @@ def send_message_to_user(message: str) -> None:
 
 
 def send_message_to_traffic_monitor(event: EventDescription) -> None:
+    """Send event to Traffic Monitor using settings from .env file"""
+
     sender = TrafficMonitor(
         event=event, host=settings.HOST_DFL, port=settings.PORT_DFL,
         name=settings.NAME_DFL, token=settings.TOKEN_DFL
@@ -39,7 +40,7 @@ def send_message_to_traffic_monitor(event: EventDescription) -> None:
     sender.send_message()
 
 
-def _get_event(data: dict, text: str = '') -> EventDescription:
+def _get_event_creator(data: dict) -> EventCreator:
     """Return event from request type"""
 
     request_type: str = data['request_type']
@@ -51,27 +52,39 @@ def _get_event(data: dict, text: str = '') -> EventDescription:
         'node_share_permission_updated': NodeShareChangePermissionEvent
     }
 
-    creator = creators[request_type]
+    return creators[request_type]
+
+
+def _get_event(data: dict, text: str = '') -> EventDescription:
+    """Return event data"""
+
+    creator: EventCreator = _get_event_creator(data)
+
+    logger.debug(f'\n{data}')
+    send_message_to_user(str(data))
 
     return creator(data, text).create_event()
 
 
-def _send_message(request: Request):
+def _send_message(request: Request) -> None:
+    """Create event and send it to Traffic monitor"""
+
     logger.debug("Sending message...")
     text = ''
     try:
         data = request.json
         file = request.files.get('file')
+
         logger.debug(f"\n\nFILES: start...")
         for elem in request.files.items():
             logger.debug(f"\n\nFILES: {elem}")
-
         logger.debug(f"\n\nFILES: FINISH")
 
         if file:
             data['uploaded_file'] = file
-        logger.debug(f'\n{data}')
-        send_message_to_user(str(data))
+            file_event: EventDescription = FileTransmittingEvent(data, text).create_event()
+            send_message_to_traffic_monitor(file_event)
+
         event: EventDescription = _get_event(data, text)
         send_message_to_traffic_monitor(event)
         text = "Message sent: OK"
@@ -85,9 +98,10 @@ def _send_message(request: Request):
     send_message_to_user(text)
 
 
-
 @app.route('/get_hook', methods=["POST"])
 def get_hook():
+    """Get POST request and send it to Traffic Monitor"""
+
     if request.method == "POST":
         if request.is_json:
             _send_message(request)

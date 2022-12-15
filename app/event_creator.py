@@ -5,9 +5,9 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+import pushapi.ttypes
 from config import logger
 from pushapi import pushapi_wrappers as wrappers
-import pushapi.ttypes
 
 
 class SkypePerson(wrappers.PersonIdentity):
@@ -41,7 +41,7 @@ class EventDescription(BaseModel):
 
 
 class EventCreator:
-    """Base class for creating events using data from OwnCloud"""
+    """Abstract Base class for creating events using data from OwnCloud"""
 
     def __init__(self, data: dict, text: str = ''):
         self.data: dict = data
@@ -56,6 +56,10 @@ class EventCreator:
             f'Владелец: {self.owner}\n'
             f'Имя файла: {self.file_name}\n'
         )
+
+    @abstractmethod
+    def create_event(self):
+        pass
 
     def _get_sender(self):
         self.sender = SkypePerson(self.owner)
@@ -72,18 +76,9 @@ class EventCreator:
         logger.debug(f"\nSELF Receiver: {self.receiver}")
         return self.receiver
 
-    def _create_message_instance(self):
-        if not self.text:
-            if not self.data:
-                self.text = 'Message data parse error'
-            else:
-                self.text: str = self.get_message()
-            logger.debug(f'Got message text: {self.text}')
-        return ChatMessage(
-            text=self.text,
-            sent_time='now',
-            sender_no=0
-        )
+
+class EventCreatorWithMessage(EventCreator):
+    """Abstract class for creating message event using data from OwnCloud"""
 
     def create_event(self):
         message: ChatMessage = self._create_message_instance()
@@ -101,23 +96,37 @@ class EventCreator:
             data_attrs=None,
         )
 
+    def _create_message_instance(self):
+        if not self.text:
+            if not self.data:
+                self.text = 'Message data parse error'
+            else:
+                self.text: str = self._get_message()
+            logger.debug(f'Got message text: {self.text}')
+        return ChatMessage(
+            text=self.text,
+            sent_time='now',
+            sender_no=0
+        )
+
     @staticmethod
     def _get_from_timestamp(stamp: int) -> datetime:
         return datetime.fromtimestamp(stamp)
 
     @abstractmethod
-    def get_message(self) -> str:
+    def _get_message(self) -> str:
         pass
 
 
-class NodeCreateEvent(EventCreator):
+class NodeCreateEvent(EventCreatorWithMessage):
+    """"Realise send message about OwnCloud uploaded file"""
 
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
         self.request_type = 'OwnCloud: загружен файл'
         self.message = f'\n{self.request_type}:\n' + self.message
 
-    def get_message(self):
+    def _get_message(self):
         date_time: datetime = self._get_from_timestamp(self.data.get('datetime'))
         self.message += (
             f'Размер файла (bytes): {self.data.get("size")}\n'
@@ -127,16 +136,15 @@ class NodeCreateEvent(EventCreator):
         return self.message
 
 
-class NodeDownloadEvent(EventCreator):
-    """Event creating when file in OwnCloud downloaded"""
+class NodeDownloadEvent(EventCreatorWithMessage):
+    """"Realise send message about OwnCloud downloaded file"""
 
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
         self.request_type = 'OwnCloud: файл скачан'
         self.message = f'\n{self.request_type}:\n' + self.message
 
-    def get_message(self) -> str:
-
+    def _get_message(self) -> str:
         downloaded_by: str = self.data.get('downloaded_by', 'Downloader error')
         self.message += (
             f'Скачал: {downloaded_by}\n'
@@ -149,7 +157,8 @@ class NodeDownloadEvent(EventCreator):
         return self.message
 
 
-class NodeShareEvent(EventCreator):
+class NodeShareEvent(EventCreatorWithMessage):
+    """"Realise send message about OwnCloud file permission opened"""
 
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
@@ -167,7 +176,7 @@ class NodeShareEvent(EventCreator):
         }
         return share_types.get(share_type, 'Share type not defined')
 
-    def get_message(self) -> str:
+    def _get_message(self) -> str:
         expiration = self.data.get("expiration")
         if expiration:
             self.message += f'\nИстекает: {self._get_from_timestamp(expiration)}'
@@ -181,9 +190,38 @@ class NodeShareEvent(EventCreator):
 
 
 class NodeShareChangePermissionEvent(NodeShareEvent):
-    """Event creating when file permission changed in OwnCloud"""
+    """"Realise send message about OwnCloud file permission changed"""
 
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
         self.request_type = 'OwnCloud: права на доступ к файлу изменены'
         self.message = f'\n{self.request_type}:\n' + self.message
+
+
+class FileTransmittingEvent(EventCreator):
+    """"Realise send file from OwnCloud event"""
+
+    def __init__(self, data: dict, text: str = ''):
+        super().__init__(data, text)
+        self.request_type = f'OwnCloud: передача файла: {self.file_name}'
+        self.message = f'\n{self.request_type}:\n' + self.message
+        self.event_type = pushapi.ttypes.EventClass.kFileExchange
+
+    def create_event(self):
+        sender: SkypePerson = self._get_sender()
+        receiver: SkypePerson = self._get_receiver()
+        data_file = self.data['uploaded_file']
+        file_data_attrs = [
+            pushapi.ttypes.Attribute(name="filename", value=self.file_name),
+        ]
+
+        return EventDescription(
+            name=self.request_type,
+            evt_class=self.event_type,
+            senders=[sender],
+            receivers=[receiver],
+            messages=None,  # должен быть пустым при отправке файла
+            service='im_skype',
+            data_file=data_file,
+            data_attrs=file_data_attrs,
+        )
