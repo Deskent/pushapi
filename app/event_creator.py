@@ -48,12 +48,12 @@ class EventCreator:
         self.text: str = text
         self.sender: Optional[SkypePerson] = None
         self.receiver: Optional[SkypePerson] = None
-        self._request_type: str = 'OwnCloud: unrecognized request type'
+        self.request_type: str = 'OwnCloud: unrecognized request type'
         self.event_type: pushapi.ttypes.EventClass = pushapi.ttypes.EventClass.kChat
         self.file_name: str = Path(self.data['path']).name
         self.owner: str = self.data['owner']
         self.message: str = (
-            f'\n{self._request_type}:\n'
+            f'\n{self.request_type}:\n'
             f'Владелец: {self.owner}\n'
             f'Имя файла: {self.file_name}\n'
         )
@@ -92,7 +92,7 @@ class EventCreator:
         receiver: SkypePerson = self._get_receiver()
 
         return EventDescription(
-            name=self._request_type,
+            name=self.request_type,
             evt_class=self.event_type,
             senders=[sender],
             receivers=[receiver],
@@ -151,7 +151,7 @@ class NodeShareEvent(EventCreator):
 
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
-        self._request_type = 'OwnCloud: открыт доступ к файлу'
+        self.request_type = 'OwnCloud: открыт доступ к файлу'
 
     def _get_share_type(self):
         share_type: str = str(self.data.get('share_type'))
@@ -183,4 +183,4 @@ class NodeShareChangePermissionEvent(NodeShareEvent):
 
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
-        self._request_type = 'OwnCloud: права на доступ к файлу изменены'
+        self.request_type = 'OwnCloud: права на доступ к файлу изменены'
