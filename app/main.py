@@ -108,8 +108,8 @@ def get_file():
     text = "File sent..."
     if file:
         data['uploaded_file'] = file
-        # file_event: EventDescription = FileTransmittingEvent(data).create_event()
-        # logger.info(f"\n\nFILE_EVENT: {file_event}")
+        file_event: EventDescription = FileTransmittingEvent(data).create_event()
+        logger.info(f"\n\nFILE_EVENT: {file_event}")
         # send_message_to_traffic_monitor(file_event)
         text = "File sent: OK"
     send_message_to_user(text)
