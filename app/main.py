@@ -61,7 +61,7 @@ def _send_message(request: Request):
     text = ''
     try:
         data = request.json
-        file = request.files['file']
+        file = request.files.get('file')
         if file:
             data['uploaded_file'] = file
         logger.debug(type(file))
