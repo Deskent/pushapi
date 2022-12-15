@@ -1,6 +1,5 @@
 from flask import Flask, request
 
-from utils import send_message_to_user
 from config import settings, logger
 from event_creator import (
     EventDescription, NodeCreateEvent, NodeShareEvent, NodeDownloadEvent,
@@ -41,7 +40,6 @@ def _send_message(data: dict):
     text = ''
     try:
         logger.debug(data)
-        send_message_to_user(str(data))
         event: EventDescription = _get_event(data, text)
         send_message_to_traffic_monitor(event)
         text = "Message sent: OK"
@@ -52,7 +50,6 @@ def _send_message(data: dict):
     except Exception as err:
         text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
         logger.error(text)
-    send_message_to_user(text)
 
 
 @app.route('/get_hook', methods=["POST"])
