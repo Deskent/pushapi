@@ -71,31 +71,20 @@ def _send_message(request: Request) -> None:
 
     logger.debug("Sending message...")
     text = ''
-    data = request.json
-    file = request.files.get('file')
-    req_json = request.get_json()
-    logger.debug(f"\n\nREQ JSON: {req_json}\n\n")
-    logger.debug(f"\n\nFILES: start...")
-    for elem in request.files.items():
-        logger.debug(f"\n\nFILES: {elem}")
-    logger.debug(f"\n\nFILES: FINISH")
+    try:
+        data = request.json
 
-    if file:
-        data['uploaded_file'] = file
-        file_event: EventDescription = FileTransmittingEvent(data, text).create_event()
-        send_message_to_traffic_monitor(file_event)
-
-    if request.is_json:
-        event: EventDescription = _get_event(data, text)
-        send_message_to_traffic_monitor(event)
-        text = "Message sent: OK"
-        logger.debug(text)
-    # except KeyError as err:
-    #     text = f"Не смог распознать данные от OwnCloud: {err}"
-    #     logger.error(text)
-    # except Exception as err:
-    #     text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
-    #     logger.error(text)
+        if request.is_json:
+            event: EventDescription = _get_event(data, text)
+            send_message_to_traffic_monitor(event)
+            text = "Message sent: OK"
+            logger.debug(text)
+    except KeyError as err:
+        text = f"Не смог распознать данные от OwnCloud: {err}"
+        logger.error(text)
+    except Exception as err:
+        text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
+        logger.error(text)
     send_message_to_user(text)
 
 
@@ -103,9 +92,25 @@ def _send_message(request: Request) -> None:
 def get_hook():
     """Get POST request and send it to Traffic Monitor"""
 
-    if request.method == "POST":
-        _send_message(request)
-        return {"result": "OK"}
+    _send_message(request)
+    return {"result": "get_hook: OK"}
+
+
+@app.route('/get_file', methods=["POST"])
+def get_file():
+    """Get POST request and send it to Traffic Monitor"""
+
+    data = request.json
+    file = request.files.get('file')
+    text = "File sent..."
+    if file:
+        data['uploaded_file'] = file
+        file_event: EventDescription = FileTransmittingEvent(data).create_event()
+        send_message_to_traffic_monitor(file_event)
+        text = "File sent: OK"
+    send_message_to_user(text)
+
+    return {"result": "get_file: OK"}
 
 
 if __name__ == '__main__':
