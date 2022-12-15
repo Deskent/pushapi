@@ -74,7 +74,8 @@ def _send_message(request: Request) -> None:
     try:
         data = request.json
         file = request.files.get('file')
-
+        req_json = request.get_json()
+        logger.debug(f"\n\nREQ JSON: {req_json}\n\n")
         logger.debug(f"\n\nFILES: start...")
         for elem in request.files.items():
             logger.debug(f"\n\nFILES: {elem}")
