@@ -350,7 +350,7 @@ class UserDemo(object):
         # проверка версии и токена
         self._check_server()
         # передача на сервер PushAPI всех тестовых событий
-        self._run_demo_event(demo_ftp)
+        self._run_demo_event(demo_skype_file_exch)
         # for demo_data in demo_collection:
         #     self._run_demo_event(demo_data)
 
