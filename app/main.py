@@ -97,7 +97,7 @@ def _send_message(request: Request) -> None:
 def get_hook():
     """Get POST request and send it to Traffic Monitor"""
 
-    # _send_message(request)
+    _send_message(request)
     return {"result": "get_hook: OK"}
 
 
@@ -105,26 +105,25 @@ def get_hook():
 def get_file():
     """Get POST request and send it to Traffic Monitor"""
 
-    data = dict(request.form)
-    file = request.files.get('file')
-    report = (
-        f"\nFile: {file}" 
-        f"\nFile.filename: {file.filename}"
-        f"\nData: {data}"
-    )
-    logger.debug(report)
-    send_message_to_user(report)
-    text = f"File sent: {file}"
-    # extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf')'
-    # TODO заменить
-    extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf', '.txt')
-
-    if file and file.filename.endswith(extensions):
-        data['uploaded_file'] = file.filename
-        file_event: EventDescription = FileTransmittingEvent(data).create_event()
-        send_message_to_traffic_monitor(file_event)
-        text = "File sent: OK"
-    send_message_to_user(text)
+    # data = dict(request.form)
+    # file = request.files.get('file')
+    # report = (
+    #     f"\nFile: {file}"
+    #     f"\nFile.filename: {file.filename}"
+    #     f"\nData: {data}"
+    # )
+    # logger.debug(report)
+    # send_message_to_user(report)
+    # text = f"File sent: {file}"
+    # # extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf')'
+    # extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf', '.txt')
+    #
+    # if file and file.filename.endswith(extensions):
+    #     data['uploaded_file'] = file.filename
+    #     file_event: EventDescription = FileTransmittingEvent(data).create_event()
+    #     send_message_to_traffic_monitor(file_event)
+    #     text = "File sent: OK"
+    # send_message_to_user(text)
 
     return {"result": "get_file: OK"}
 
