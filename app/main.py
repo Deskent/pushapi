@@ -37,7 +37,10 @@ def send_message_to_traffic_monitor(event: EventDescription) -> None:
         event=event, host=settings.HOST_DFL, port=settings.PORT_DFL,
         name=settings.NAME_DFL, token=settings.TOKEN_DFL
     )
-    sender.send_message()
+    try:
+        sender.send_message()
+    except Exception as err:
+        logger.error(err)
     logger.debug(f"\nSend event to Traffic Monitor: OK")
 
 
@@ -112,7 +115,6 @@ def get_file():
     logger.debug(report)
     send_message_to_user(report)
     text = f"File sent: {file}"
-
     # extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf')'
     # TODO заменить
     extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf', '.txt')
