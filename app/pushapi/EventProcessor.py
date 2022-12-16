@@ -267,7 +267,9 @@ class Client(Iface):
          - event_id
          - stream_id
         """
+        print("send_EndStream")
         self.send_EndStream(event_id, stream_id)
+        print("recv_EndStream")
         self.recv_EndStream()
 
     def send_EndStream(self, event_id, stream_id):

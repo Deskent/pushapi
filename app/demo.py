@@ -409,5 +409,8 @@ class UserDemo(object):
 
 
 if __name__ == '__main__':
-    demo = UserDemo(host=settings.HOST_DFL, port=settings.PORT_DFL,
-        name=settings.NAME_DFL, token=settings.TOKEN_DFL).run()
+    try:
+        demo = UserDemo(host=settings.HOST_DFL, port=settings.PORT_DFL,
+            name=settings.NAME_DFL, token=settings.TOKEN_DFL).run()
+    except KeyboardInterrupt:
+        pass
