@@ -37,7 +37,7 @@ class EventDescription:
     receivers: list
     service: str = 'im_skype'
     data_file: str = None
-    data_attrs: str = None
+    data_attrs: list = None
     messages: list = None
 
 
@@ -94,7 +94,7 @@ class EventCreatorWithMessage(EventCreator):
             messages=[message],
             service='im_skype',
             data_file=None,
-            data_attrs=None,
+            data_attrs=[],
         )
 
     def _create_message_instance(self):
@@ -221,7 +221,7 @@ class FileTransmittingEvent(EventCreator):
             evt_class=self.event_type,
             senders=[sender],
             receivers=[receiver],
-            messages=None,  # должен быть пустым при отправке файла
+            messages=[],  # должен быть пустым при отправке файла
             service='im_skype',
             data_file=data_file,
             data_attrs=file_data_attrs,

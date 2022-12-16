@@ -110,10 +110,10 @@ def get_file():
     text = f"File sent: {file}"
 
     # extensions = ('doc', 'docx', 'xls', 'xlsx', 'pdf')
-    # if file:# and file.name.endswith(extensions):
-        # data['uploaded_file'] = file
-        # file_event: EventDescription = FileTransmittingEvent(data).create_event()
-    #     logger.info(f"\n\nFILE_EVENT: {file_event}")
+    if file:# and file.name.endswith(extensions):
+        data['uploaded_file'] = file
+        file_event: EventDescription = FileTransmittingEvent(data).create_event()
+        logger.info(f"\n\nFILE_EVENT: {file_event}")
     #     # send_message_to_traffic_monitor(file_event)
     #     text = "File sent: OK"
     # send_message_to_user(text)
