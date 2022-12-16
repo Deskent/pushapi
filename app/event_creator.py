@@ -65,7 +65,7 @@ class EventCreator:
         self.sender = SkypePerson(self.owner)
         if not self.sender:
             self.sender = 'All'
-        logger.debug(f"Sender: {self.sender}")
+        # logger.debug(f"Sender: {self.sender}")
         return self.sender
 
     def _get_receiver(self):
@@ -73,7 +73,7 @@ class EventCreator:
         if not receiver:
             receiver = "All"
         self.receiver = SkypePerson(receiver)
-        logger.debug(f"\nSELF Receiver: {self.receiver}")
+        # logger.debug(f"\nSELF Receiver: {self.receiver}")
         return self.receiver
 
 
