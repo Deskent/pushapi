@@ -2,7 +2,7 @@ from abc import abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, TextIO
+from typing import Optional
 
 import pushapi.ttypes
 from config import logger
@@ -36,9 +36,9 @@ class EventDescription:
     senders: list
     receivers: list
     service: str = 'im_skype'
-    data_file: str = None
-    data_attrs: list = None
-    messages: list = None
+    data_file: Optional[str] = None
+    data_attrs: Optional[list] = None
+    messages: Optional[list] = None
 
 
 class EventCreator:
@@ -66,7 +66,6 @@ class EventCreator:
         self.sender = SkypePerson(self.owner)
         if not self.sender:
             self.sender = 'All'
-        # logger.debug(f"Sender: {self.sender}")
         return self.sender
 
     def _get_receiver(self):
@@ -74,7 +73,6 @@ class EventCreator:
         if not receiver:
             receiver = "All"
         self.receiver = SkypePerson(receiver)
-        # logger.debug(f"\nSELF Receiver: {self.receiver}")
         return self.receiver
 
 

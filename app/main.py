@@ -1,34 +1,13 @@
-import requests as requests
 from flask import Flask, request, Request
-from werkzeug.utils import secure_filename
 
 from config import settings, logger
 from event_creator import (
     EventDescription, NodeCreateEvent, NodeShareEvent, NodeDownloadEvent,
-    NodeShareChangePermissionEvent, EventCreator, FileTransmittingEvent
+    NodeShareChangePermissionEvent, EventCreator
 )
 from sender import TrafficMonitor
 
 app = Flask(__name__)
-
-
-def send_message_to_user(message: str) -> None:
-    """Send message to telegram"""
-
-    telegram_id = settings.TELEGRAM_ID
-    if not telegram_id or not settings.TELEBOT_TOKEN:
-        logger.debug("Can`t send report to telegram: no token or ID")
-        return
-    url: str = (
-        f"https://api.telegram.org/bot{settings.TELEBOT_TOKEN}/sendMessage?"
-        f"chat_id={telegram_id}"
-        f"&text={message}"
-    )
-    try:
-        requests.get(url, timeout=5)
-        logger.debug(f"telegram id: {telegram_id}\n message: {message}")
-    except Exception as err:
-        logger.debug(f"telegram id: {telegram_id}\n message: {message}\n requests error: {err}")
 
 
 def send_message_to_traffic_monitor(event: EventDescription) -> None:
@@ -66,7 +45,6 @@ def _get_event(data: dict, text: str = '') -> EventDescription:
     creator: EventCreator = _get_event_creator(data)
 
     logger.debug(f'\n{data}')
-    send_message_to_user(str(data))
 
     return creator(data, text).create_event()
 
@@ -90,7 +68,6 @@ def _send_message(request: Request) -> None:
     except Exception as err:
         text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
         logger.error(text)
-    send_message_to_user(text)
 
 
 @app.route('/get_hook', methods=["POST"])
@@ -104,26 +81,6 @@ def get_hook():
 @app.route('/get_file', methods=["POST"])
 def get_file():
     """Get POST request and send it to Traffic Monitor"""
-
-    # data = dict(request.form)
-    # file = request.files.get('file')
-    # report = (
-    #     f"\nFile: {file}"
-    #     f"\nFile.filename: {file.filename}"
-    #     f"\nData: {data}"
-    # )
-    # logger.debug(report)
-    # send_message_to_user(report)
-    # text = f"File sent: {file}"
-    # # extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf')'
-    # extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf', '.txt')
-    #
-    # if file and file.filename.endswith(extensions):
-    #     data['uploaded_file'] = file.filename
-    #     file_event: EventDescription = FileTransmittingEvent(data).create_event()
-    #     send_message_to_traffic_monitor(file_event)
-    #     text = "File sent: OK"
-    # send_message_to_user(text)
 
     return {"result": "get_file: OK"}
 
