@@ -67,6 +67,7 @@ class TrafficMonitor(object):
         if server_version < client_version:
             raise RuntimeError("incompatible version: client: %d, server: %d" % (client_version, server_version))
         self._client.VerifyCredentials(self._creds)
+        logger.debug(f"Checking server version: OK")
 
     def _run_demo_event(self, event):
         """Формирование и отправка примера события на сервер.
