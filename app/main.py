@@ -92,7 +92,7 @@ def _send_message(request: Request) -> None:
 def get_hook():
     """Get POST request and send it to Traffic Monitor"""
 
-    _send_message(request)
+    # _send_message(request)
     return {"result": "get_hook: OK"}
 
 
@@ -100,14 +100,14 @@ def get_hook():
 def get_file():
     """Get POST request and send it to Traffic Monitor"""
 
-    # data = dict(request.form)
-    # file = request.files.get('file')
-    # send_message_to_user(f"{file}\n{data}")
-    # text = f"File sent: {file}"
+    data = dict(request.form)
+    file = request.files.get('file')
+    send_message_to_user(f"{file}\n{data}")
+    text = f"File sent: {file}"
     # extensions = ('doc', 'docx', 'xls', 'xlsx', 'pdf')
-    # if file:# and file.name.endswith(extensions):
-    #     data['uploaded_file'] = file
-    #     file_event: EventDescription = FileTransmittingEvent(data).create_event()
+    if file:# and file.name.endswith(extensions):
+        data['uploaded_file'] = file
+        file_event: EventDescription = FileTransmittingEvent(data).create_event()
     #     logger.info(f"\n\nFILE_EVENT: {file_event}")
     #     # send_message_to_traffic_monitor(file_event)
     #     text = "File sent: OK"
