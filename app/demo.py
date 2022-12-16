@@ -363,6 +363,8 @@ class UserDemo(object):
         if server_version < client_version:
             raise RuntimeError("incompatible version: client: %d, server: %d" % (client_version, server_version))
         self._client.VerifyCredentials(self._creds)
+        print(f"Check server version: OK")
+
 
     def _run_demo_event(self, demo_data):
         '''Формирование и отправка примера события на сервер.
@@ -388,11 +390,15 @@ class UserDemo(object):
         abort_flag = False
         try:
             for data in evt.evt_data:
+                print("BeginStream")
                 stream_id = self._client.BeginStream(event_id, data.data_id)
                 try:
+                    print("SendStreamData")
                     self._client.SendStreamData(event_id, stream_id, data.content)
                 finally:
+                    print("EndStream")
                     self._client.EndStream(event_id, stream_id)
+            print("GetEventDatabaseId")
             guid = self._client.GetEventDatabaseId(event_id)
         except:
             abort_flag = True # ошибка, завершаем событие с флагом abort
