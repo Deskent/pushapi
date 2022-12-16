@@ -149,7 +149,7 @@ demo_web = ExampleDescription(
 # Атрибуты данных для события пересылки по ftp
 ftp_data_attrs = [
     # обязательные атрибуты
-    pushapi.Attribute(constants.data_attr_file_filename, "example_filename"),
+    pushapi.Attribute(constants.data_attr_file_filename, "help.txt"),
     pushapi.Attribute(constants.data_attr_file_destination_file_path, "destination/path")
 ]
 # Описание примера события ftp
@@ -159,7 +159,7 @@ demo_ftp = ExampleDescription(
     service=constants.service_file_ftp, # сервис события - "ftp"
     senders=[sender_ftp, sender_ws_ftp], # отправители - для примера добавлена персона и компьютер
     receivers=[receiver_ftp], # получатель - веб-ресурс
-    data_file="ftpfile.txt", # пересылаемые данные
+    data_file="help.txt", # пересылаемые данные
     data_attrs=ftp_data_attrs, # атрибуты данных - требуется задание имени файла
     messages=None # сообщения чата - должны быть None для событий класса kFileExchange
 )
@@ -350,7 +350,7 @@ class UserDemo(object):
         # проверка версии и токена
         self._check_server()
         # передача на сервер PushAPI всех тестовых событий
-        self._run_demo_event(demo_skype_file_exch)
+        self._run_demo_event(demo_ftp)
         # for demo_data in demo_collection:
         #     self._run_demo_event(demo_data)
 
