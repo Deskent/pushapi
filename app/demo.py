@@ -10,7 +10,7 @@ import pushapi.ttypes as pushapi
 import pushapi.constants as constants
 
 import pushapi.pushapi_wrappers as wrappers
-from app.config import settings
+from config import settings
 
 
 class EventDataFromString(wrappers.EventData):
