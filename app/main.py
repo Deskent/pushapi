@@ -102,7 +102,12 @@ def get_file():
 
     data = dict(request.form)
     file = request.files.get('file')
-    report = f"{file}\n{file.name}\n{data}"
+    report = (
+        f"\nFile: {file}" 
+        f"\nFile name: {file.name}" 
+        f"\nFile.filename: {file.filename}"
+        f"\nData: {data}"
+    )
     logger.debug(report)
     send_message_to_user(report)
     text = f"File sent: {file}"
@@ -111,7 +116,7 @@ def get_file():
     # TODO заменить
     extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf', '.txt')
 
-    if file and file.name.endswith(extensions):
+    if file and file.filename.endswith(extensions):
         logger.debug("\nTry to create event...")
         data['uploaded_file'] = file
         file_event: EventDescription = FileTransmittingEvent(data).create_event()
