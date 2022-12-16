@@ -363,6 +363,7 @@ class EventData(object):
             return
         iprot.readStructBegin()
         while True:
+            print("readFieldBegin")
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
