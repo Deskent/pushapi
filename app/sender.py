@@ -24,7 +24,7 @@ class EventDataFromFile(EventDataFromString):
     def __init__(self, filename, attrs=None):
         with open(filename) as stm:
             content = stm.read()
-        logger.debug(f"File content: {content}")
+        logger.debug(f"File content: \n{content}\n")
         super(EventDataFromFile, self).__init__(content, attrs)
 
 
