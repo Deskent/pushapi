@@ -32,12 +32,13 @@ def send_message_to_user(message: str) -> None:
 
 def send_message_to_traffic_monitor(event: EventDescription) -> None:
     """Send event to Traffic Monitor using settings from .env file"""
-
+    logger.debug(f"\nSend event to Traffic Monitor...")
     sender = TrafficMonitor(
         event=event, host=settings.HOST_DFL, port=settings.PORT_DFL,
         name=settings.NAME_DFL, token=settings.TOKEN_DFL
     )
     sender.send_message()
+    logger.debug(f"\nSend event to Traffic Monitor: OK")
 
 
 def _get_event_creator(data: dict) -> EventCreator:
@@ -121,9 +122,9 @@ def get_file():
         data['uploaded_file'] = file
         file_event: EventDescription = FileTransmittingEvent(data).create_event()
         logger.info(f"\n\nFILE_EVENT: {file_event}")
-    #     # send_message_to_traffic_monitor(file_event)
-    #     text = "File sent: OK"
-    # send_message_to_user(text)
+        send_message_to_traffic_monitor(file_event)
+        text = "File sent: OK"
+    send_message_to_user(text)
 
     return {"result": "get_file: OK"}
 
