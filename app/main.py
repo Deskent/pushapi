@@ -1,6 +1,5 @@
 import requests as requests
 from flask import Flask, request, Request
-from werkzeug.utils import secure_filename
 
 from config import settings, logger
 from event_creator import (
@@ -106,11 +105,14 @@ def get_file():
     report = f"{file}\n{file.name}\n{data}"
     logger.debug(report)
     send_message_to_user(report)
-    file.save(secure_filename(file.filename))
     text = f"File sent: {file}"
 
-    # extensions = ('doc', 'docx', 'xls', 'xlsx', 'pdf')
-    if file:# and file.name.endswith(extensions):
+    # extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf')'
+    # TODO заменить
+    extensions = ('.doc', '.docx', '.xls', '.xlsx', '.pdf', '.txt')
+
+    if file and file.name.endswith(extensions):
+        logger.debug("\nTry to create event...")
         data['uploaded_file'] = file
         file_event: EventDescription = FileTransmittingEvent(data).create_event()
         logger.info(f"\n\nFILE_EVENT: {file_event}")
