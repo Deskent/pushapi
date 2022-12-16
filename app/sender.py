@@ -85,7 +85,7 @@ class TrafficMonitor(object):
         :param evt: полностью сформированное событие
         :type evt: pushapi.Event
         """
-
+        logger.debug(f"Sending event to server...")
         event_id = self._client.BeginEvent(evt, self._creds)
         abort_flag = False
         try:
@@ -102,6 +102,7 @@ class TrafficMonitor(object):
         finally:
             self._client.EndEvent(event_id, abort_flag)
 
+        logger.debug(f"Sending event to server: OK")
         return guid
 
     def make_event(self, data):
