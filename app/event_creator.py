@@ -1,9 +1,8 @@
 from abc import abstractmethod
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
-
-from pydantic import BaseModel
 
 import pushapi.ttypes
 from config import logger
@@ -23,21 +22,23 @@ class SkypePerson(wrappers.PersonIdentity):
         super(SkypePerson, self).__init__([wrappers.SkypeContact(skype_id)])
 
 
-class ChatMessage(BaseModel):
+@dataclass
+class ChatMessage:
     text: str
     sent_time: str = 'now'
     sender_no: int = 0
 
 
-class EventDescription(BaseModel):
+@dataclass
+class EventDescription:
     name: str
     evt_class: object
-    service: str = 'im_skype'
     senders: list
     receivers: list
+    service: str = 'im_skype'
     data_file: str = None
     data_attrs: str = None
-    messages: list = []
+    messages: list = None
 
 
 class EventCreator:
