@@ -2,7 +2,7 @@ from abc import abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, TextIO
 
 import pushapi.ttypes
 from config import logger
@@ -211,9 +211,9 @@ class FileTransmittingEvent(EventCreator):
     def create_event(self):
         sender: SkypePerson = self._get_sender()
         receiver: SkypePerson = self._get_receiver()
-        data_file = self.data['uploaded_file']
+        file_name = self.data['uploaded_file']
         file_data_attrs = [
-            pushapi.ttypes.Attribute(name="filename", value=self.file_name),
+            pushapi.ttypes.Attribute(name="filename", value=file_name),
         ]
 
         return EventDescription(
@@ -223,6 +223,6 @@ class FileTransmittingEvent(EventCreator):
             receivers=[receiver],
             messages=[],  # должен быть пустым при отправке файла
             service='im_skype',
-            data_file=data_file,
+            data_file=file_name,
             data_attrs=file_data_attrs,
         )
