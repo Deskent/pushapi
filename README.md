@@ -18,6 +18,9 @@
     Активировать его:
         source ./venv/bin/activate
 
+    Запустить команду  
+        python -m pip install -U && python -m pip install -r requirements.txt
+
     Создать файл ".env"
     Скопировать в него переменные окружения из файла ".env-template"
     и настроить их.
