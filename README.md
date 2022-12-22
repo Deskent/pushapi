@@ -15,6 +15,7 @@
 
     5. Создать виртуальное окружение для python:
         python3.8 -m venv venv
+
     6. Активировать его:
         source ./venv/bin/activate
 
