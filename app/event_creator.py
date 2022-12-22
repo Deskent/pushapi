@@ -9,19 +9,6 @@ from config import logger
 from pushapi import pushapi_wrappers as wrappers
 
 
-class SkypePerson(wrappers.PersonIdentity):
-    """Идентификация персоны с контактом skype."""
-
-    def __init__(self, skype_id):
-        """Формирует идентификацию персоны с контактом skype.
-        
-        :param skype_id: идентификатор пользователя в скайпе
-        :type skype_id: str
-        """
-
-        super(SkypePerson, self).__init__([wrappers.SkypeContact(skype_id)])
-
-
 @dataclass
 class ChatMessage:
     text: str
@@ -39,6 +26,19 @@ class EventDescription:
     data_file: Optional[str] = None
     data_attrs: Optional[list] = None
     messages: Optional[list] = None
+
+
+class SkypePerson(wrappers.PersonIdentity):
+    """Идентификация персоны с контактом skype."""
+
+    def __init__(self, skype_id):
+        """Формирует идентификацию персоны с контактом skype.
+
+        :param skype_id: идентификатор пользователя в скайпе
+        :type skype_id: str
+        """
+
+        super(SkypePerson, self).__init__([wrappers.SkypeContact(skype_id)])
 
 
 class EventCreator:

@@ -13,8 +13,6 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     APP_HOST: str = "127.0.0.1"
     APP_PORT: int = 8989
-    TELEGRAM_ID: str = ''
-    TELEBOT_TOKEN: str = ''
 
 
 BASE_DIR = Path(__file__).parent

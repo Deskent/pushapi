@@ -78,12 +78,5 @@ def get_hook():
     return {"result": "get_hook: OK"}
 
 
-@app.route('/get_file', methods=["POST"])
-def get_file():
-    """Get POST request and send it to Traffic Monitor"""
-
-    return {"result": "get_file: OK"}
-
-
 if __name__ == '__main__':
     app.run(debug=settings.DEBUG, host=settings.APP_HOST, port=settings.APP_PORT)
