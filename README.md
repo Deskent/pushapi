@@ -14,9 +14,8 @@
         cd pushapi
 
     5. Создать виртуальное окружение для python:
-        python3.8 -m venv venv
-            или
         python3 -m venv venv
+        Проверяем что папка venv создана!
 
     6. Активировать его:
         source ./venv/bin/activate
