@@ -21,7 +21,7 @@
         source ./venv/bin/activate
 
     7. Запустить команду  
-        python -m pip install -U && python -m pip install -r requirements.txt
+        python -m pip install -U pip && python -m pip install -r requirements.txt
 
     8. Создать файл ".env"
     9. Скопировать в него переменные окружения из файла ".env-template"
