@@ -56,7 +56,7 @@ def _send_message(request: Request) -> None:
     text = ''
     try:
         data = request.json
-
+        logger.debug(data)
         if request.is_json:
             event: EventDescription = _get_event(data, text)
             send_message_to_traffic_monitor(event)
