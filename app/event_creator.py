@@ -51,11 +51,13 @@ class EventCreator:
         self.receiver: Optional[SkypePerson] = None
         self.request_type: str = 'OwnCloud: unrecognized request type'
         self.event_type: pushapi.ttypes.EventClass = pushapi.ttypes.EventClass.kChat
+        self.file_path: Path = Path(self.data['path'])
         self.file_name: str = Path(self.data['path']).name
         self.owner: str = self.data['owner']
         self.message: str = (
             f'Владелец: {self.owner}\n'
             f'Имя файла: {self.file_name}\n'
+            f'Путь до файла: {self.file_path}\n'
         )
 
     @abstractmethod
