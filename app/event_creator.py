@@ -80,11 +80,11 @@ class EventCreator:
             31: 'Все',
         }
         permissions_key: int = self.data.get('permissions')
-        if not permissions_key or permissions_key not in PERMISSIONS:
-            logger.debug(f'Undefined permissions key: {permissions_key}')
+        if not permissions_key:
             return ''
-
-        return PERMISSIONS[permissions_key]
+        if permissions_key in PERMISSIONS:
+            return PERMISSIONS[permissions_key]
+        return f'Не определен: {permissions_key}'
 
     @abstractmethod
     def create_event(self):
