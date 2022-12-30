@@ -198,21 +198,22 @@ class NodeShareEvent(EventCreatorWithMessage):
         share_type: str = str(self.data.get('share_type'))
 
         share_types = {
-            '0': f'\nДля пользователя: {self.data.get("share_with")}',
-            '1': f'\nДля группы: {self.data.get("share_with")}',
-            '3': f'\nПо ссылке',
-            '4': f'\nГостям: {self.data.get("share_with")}',
+            '0': f'Для пользователя: {self.data.get("share_with")}\n',
+            '1': f'Для группы: {self.data.get("share_with")}\n',
+            '3': f'По ссылке\n',
+            '4': f'Гостям: {self.data.get("share_with")}\n',
         }
         return share_types.get(share_type, 'Share type not defined')
 
     def _get_message(self) -> str:
-        expiration = self.data.get("expiration")
-        if expiration:
-            self.message += f'\nИстекает: {self._get_from_timestamp(expiration)}'
 
         self.message += self._get_share_type()
         if self.data.get('passwordEnabled'):
-            self.message += '\nТребуется пароль.'
+            self.message += 'Требуется пароль\n'
+
+        expiration = self.data.get("expiration")
+        if expiration:
+            self.message += f'Истекает: {self._get_from_timestamp(expiration)}\n'
 
         return self.message
 
