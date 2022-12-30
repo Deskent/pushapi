@@ -59,9 +59,9 @@ class EventCreator:
 
     def get_base_message(self) -> str:
         result: str = (
-            f'Владелец: {self.owner}\n'
             f'Имя файла: {self.file_name}\n'
             f'Путь до файла: {self.file_path}\n'
+            f'Владелец: {self.owner}\n'
         )
         if self.permissions:
             result += f'Модификатор доступа: {self.permissions}\n'
