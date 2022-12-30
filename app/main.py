@@ -12,7 +12,8 @@ app = Flask(__name__)
 
 def send_message_to_traffic_monitor(event: EventDescription) -> None:
     """Send event to Traffic Monitor using settings from .env file"""
-    logger.debug(f"\nSend event to Traffic Monitor...")
+
+    logger.debug(f"Send event to Traffic Monitor...")
     sender = TrafficMonitor(
         event=event, host=settings.HOST_DFL, port=settings.PORT_DFL,
         name=settings.NAME_DFL, token=settings.TOKEN_DFL
@@ -21,7 +22,7 @@ def send_message_to_traffic_monitor(event: EventDescription) -> None:
         sender.send_message()
     except Exception as err:
         logger.error(err)
-    logger.debug(f"\nSend event to Traffic Monitor: OK")
+    logger.debug(f"Send event to Traffic Monitor: OK")
 
 
 def _get_event_creator(data: dict) -> EventCreator:
@@ -44,8 +45,6 @@ def _get_event(data: dict, text: str = '') -> EventDescription:
 
     creator: EventCreator = _get_event_creator(data)
 
-    logger.debug(f'\n{data}')
-
     return creator(data, text).create_event()
 
 
@@ -56,18 +55,16 @@ def _send_message(request: Request) -> None:
     text = ''
     try:
         data = request.json
-        logger.debug(data)
+        logger.debug(f'\n\n{data}\n')
         if request.is_json:
             event: EventDescription = _get_event(data, text)
             send_message_to_traffic_monitor(event)
-            text = "Message sent: OK"
-            logger.debug(text)
     except KeyError as err:
         text = f"Не смог распознать данные от OwnCloud: {err}"
-        logger.error(text)
+        logger.exception(text)
     except Exception as err:
         text = f"Произошла ошибка при обработке сообщения OwnCloud: {err}"
-        logger.error(text)
+        logger.exception(text)
 
 
 @app.route('/get_hook', methods=["POST"])

@@ -54,11 +54,37 @@ class EventCreator:
         self.file_path: Path = Path(self.data['path'])
         self.file_name: str = Path(self.data['path']).name
         self.owner: str = self.data['owner']
-        self.message: str = (
+        self.permissions: str = self.get_permissions_message()
+        self.message: str = self.get_base_message()
+
+    def get_base_message(self) -> str:
+        result: str = (
             f'Владелец: {self.owner}\n'
             f'Имя файла: {self.file_name}\n'
             f'Путь до файла: {self.file_path}\n'
         )
+        if self.permissions:
+            result += f'Модификатор доступа: {self.permissions}\n'
+
+        return result
+
+    def get_permissions_message(self) -> str:
+        PERMISSIONS: dict = {
+            1: 'Скачивание / просмотр',
+            2: 'Обновление',
+            3: 'Скачивание / Просмотр / Правка',
+            4: 'Для создания',
+            8: 'Для удаления',
+            16: 'Для открытия доступа',
+            19: 'Для группы',
+            31: 'Все',
+        }
+        permissions_key: int = self.data.get('permissions')
+        if not permissions_key or permissions_key not in PERMISSIONS:
+            logger.debug(f'Undefined permissions key: {permissions_key}')
+            return ''
+
+        return PERMISSIONS[permissions_key]
 
     @abstractmethod
     def create_event(self):
@@ -103,7 +129,7 @@ class EventCreatorWithMessage(EventCreator):
                 self.text = 'Message data parse error'
             else:
                 self.text: str = self._get_message()
-            logger.debug(f'Got message text: {self.text}')
+            logger.debug(f'Got message text: \n{self.text}\n')
         return ChatMessage(
             text=self.text,
             sent_time='now',
@@ -131,7 +157,7 @@ class NodeCreateEvent(EventCreatorWithMessage):
         date_time: datetime = self._get_from_timestamp(self.data.get('datetime'))
         self.message += (
             f'Размер файла (bytes): {self.data.get("size")}\n'
-            f'Дата создания файла: {date_time}'
+            f'Дата создания файла: {date_time}\n'
         )
 
         return self.message
