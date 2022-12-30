@@ -129,7 +129,9 @@ class EventCreatorWithMessage(EventCreator):
                 self.text = 'Message data parse error'
             else:
                 self.text: str = self._get_message()
+
             logger.debug(f'Got message text: \n{self.text}\n')
+
         return ChatMessage(
             text=self.text,
             sent_time='now',
@@ -211,7 +213,6 @@ class NodeShareEvent(EventCreatorWithMessage):
         self.message += self._get_share_type()
         if self.data.get('passwordEnabled'):
             self.message += '\nТребуется пароль.'
-        logger.debug(self.message)
 
         return self.message
 
