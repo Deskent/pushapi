@@ -216,7 +216,7 @@ class NodeShareEvent(EventCreatorWithMessage):
 
         public_link_path: str = self.data.get('public_link_path')
         if public_link_path:
-            result += f'\nСсылка: {self._get_full_link(public_link_path)}'
+            result += f'\nСсылка: {self._get_full_link(public_link_path)}\n'
 
         return result
 
