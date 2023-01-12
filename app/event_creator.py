@@ -67,7 +67,7 @@ class EventCreator:
             result += f'Модификатор доступа: {self.permissions}\n'
         node_type = self.data.get('node_type')
         if node_type:
-            result += f'Тип открытого ресурса: [{node_type}]'
+            result += f'Тип открытого ресурса: [{node_type}]\n'
 
         return result
 
@@ -194,7 +194,7 @@ class NodeShareEvent(EventCreatorWithMessage):
 
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
-        self.request_type = 'OwnCloud: открыт доступ:'
+        self.request_type = 'OwnCloud: открыт доступ'
         self.message = f'\n{self.request_type}:\n' + self.message
 
     def _get_full_link(self, link: str) -> str:
@@ -203,10 +203,10 @@ class NodeShareEvent(EventCreatorWithMessage):
     def _get_share_type(self):
 
         share_types = {
-            '0': f'\nДля пользователя: {self.data.get("share_with")}\n',
-            '1': f'\nДля группы: {self.data.get("share_with")}\n',
-            '3': f'\nПо ссылке\n',
-            '4': f'\nГостям: {self.data.get("share_with")}\n',
+            '0': f'Для пользователя: {self.data.get("share_with")}\n',
+            '1': f'Для группы: {self.data.get("share_with")}\n',
+            '3': f'По ссылке\n',
+            '4': f'Гостям: {self.data.get("share_with")}\n',
         }
 
         share_type: str = self.data.get('share_type')
