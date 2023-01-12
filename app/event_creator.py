@@ -58,16 +58,25 @@ class EventCreator:
         self.message: str = self.get_base_message()
 
     def get_base_message(self) -> str:
-        result: str = (
+        result = ''
+
+        node_type = self.data.get('node_type')
+        if node_type:
+            if node_type == 'file':
+                text = 'Файл'
+            elif node_type == 'folder':
+                text = 'Каталог'
+            else:
+                text = node_type
+            result += f'Тип открытого ресурса: {text}\n'
+
+        result += (
             f'Имя: {self.file_name}\n'
             f'Путь: {self.file_path}\n'
             f'Владелец: {self.owner}\n'
         )
         if self.permissions:
             result += f'Модификатор доступа: {self.permissions}\n'
-        node_type = self.data.get('node_type')
-        if node_type:
-            result += f'Тип открытого ресурса: [{node_type}]\n'
 
         return result
 
