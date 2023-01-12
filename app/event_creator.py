@@ -59,8 +59,8 @@ class EventCreator:
 
     def get_base_message(self) -> str:
         result: str = (
-            f'Имя файла: {self.file_name}\n'
-            f'Путь до файла: {self.file_path}\n'
+            f'Имя: {self.file_name}\n'
+            f'Путь: {self.file_path}\n'
             f'Владелец: {self.owner}\n'
         )
         if self.permissions:
@@ -194,7 +194,7 @@ class NodeShareEvent(EventCreatorWithMessage):
 
     def __init__(self, data: dict, text: str = ''):
         super().__init__(data, text)
-        self.request_type = 'OwnCloud: открыт доступ к файлу'
+        self.request_type = 'OwnCloud: открыт доступ:'
         self.message = f'\n{self.request_type}:\n' + self.message
 
     def _get_full_link(self, link: str) -> str:
@@ -213,10 +213,11 @@ class NodeShareEvent(EventCreatorWithMessage):
         result = ''
         if share_type:
             result += share_types.get(str(share_type), 'Share type not defined')
-
-        public_link_path: str = self.data.get('public_link_path')
-        if public_link_path:
-            result += f'Ссылка: {self._get_full_link(public_link_path)}\n'
+            if str(share_type) == '3':
+                public_link_path: str = self.data.get('public_link_path')
+                if public_link_path:
+                    full_link: str = self._get_full_link(public_link_path)
+                    result += f'Ссылка: {full_link}\n'
 
         return result
 
@@ -252,6 +253,8 @@ class FileTransmittingEvent(EventCreator):
         self.event_type = pushapi.ttypes.EventClass.kFileExchange
 
     def create_event(self):
+        """Return event for Traffic monitor pushapi script"""
+
         sender: SkypePerson = self._get_sender()
         receiver: SkypePerson = self._get_receiver()
         file_name = self.data['uploaded_file']
