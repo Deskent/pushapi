@@ -203,10 +203,10 @@ class NodeShareEvent(EventCreatorWithMessage):
     def _get_share_type(self):
 
         share_types = {
-            '0': f'Для пользователя: {self.data.get("share_with")}\n',
-            '1': f'Для группы: {self.data.get("share_with")}\n',
-            '3': f'По ссылке\n',
-            '4': f'Гостям: {self.data.get("share_with")}\n',
+            '0': f'\nДля пользователя: {self.data.get("share_with")}\n',
+            '1': f'\nДля группы: {self.data.get("share_with")}\n',
+            '3': f'\nПо ссылке\n',
+            '4': f'\nГостям: {self.data.get("share_with")}\n',
         }
 
         share_type: str = self.data.get('share_type')
@@ -216,7 +216,7 @@ class NodeShareEvent(EventCreatorWithMessage):
 
         public_link_path: str = self.data.get('public_link_path')
         if public_link_path:
-            result += f'Ссылка: {self._get_full_link(public_link_path)}'
+            result += f'\nСсылка: {self._get_full_link(public_link_path)}'
 
         return result
 
