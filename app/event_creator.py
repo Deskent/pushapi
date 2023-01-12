@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 import pushapi.ttypes
-from config import logger
+from config import logger, settings
 from pushapi import pushapi_wrappers as wrappers
 
 
@@ -65,6 +65,9 @@ class EventCreator:
         )
         if self.permissions:
             result += f'Модификатор доступа: {self.permissions}\n'
+        node_type = self.data.get('node_type')
+        if node_type:
+            result += f'Тип открытого ресурса: [{node_type}]'
 
         return result
 
@@ -194,8 +197,10 @@ class NodeShareEvent(EventCreatorWithMessage):
         self.request_type = 'OwnCloud: открыт доступ к файлу'
         self.message = f'\n{self.request_type}:\n' + self.message
 
+    def _get_full_link(self, link: str) -> str:
+        return f'{settings.OWNCLOUD_HOST}{link}'
+
     def _get_share_type(self):
-        share_type: str = str(self.data.get('share_type'))
 
         share_types = {
             '0': f'Для пользователя: {self.data.get("share_with")}\n',
@@ -203,7 +208,15 @@ class NodeShareEvent(EventCreatorWithMessage):
             '3': f'По ссылке\n',
             '4': f'Гостям: {self.data.get("share_with")}\n',
         }
-        return share_types.get(share_type, 'Share type not defined')
+
+        share_type: str = self.data.get('share_type')
+        result = ''
+        if share_type:
+            result += share_types.get(str(share_type), 'Share type not defined')
+
+        public_link_path: str = self.data.get('public_link_path')
+        if public_link_path:
+            result += f'Ссылка: {self._get_full_link(public_link_path)}'
 
     def _get_message(self) -> str:
 

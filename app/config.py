@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     PORT_DFL: int
     NAME_DFL: str
     TOKEN_DFL: str
+    OWNCLOUD_HOST: str
     DEBUG: bool = False
     APP_HOST: str = "127.0.0.1"
     APP_PORT: int = 8989
