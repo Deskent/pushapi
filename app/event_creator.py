@@ -218,6 +218,8 @@ class NodeShareEvent(EventCreatorWithMessage):
         if public_link_path:
             result += f'Ссылка: {self._get_full_link(public_link_path)}'
 
+        return result
+
     def _get_message(self) -> str:
 
         self.message += self._get_share_type()
