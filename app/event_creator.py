@@ -68,7 +68,7 @@ class EventCreator:
                 text = 'Каталог'
             else:
                 text = node_type
-            result += f'Тип открытого ресурса: {text}\n'
+            result += f'Тип открытого ресурса: [{text}]\n'
 
         result += (
             f'Имя: {self.file_name}\n'
